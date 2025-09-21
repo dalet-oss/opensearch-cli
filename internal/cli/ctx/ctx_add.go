@@ -90,7 +90,7 @@ func CreateClusterEntry(conf appconfig.AppConfig) appconfig.ClusterConfig {
 func CreateUserEntry(conf appconfig.AppConfig, cluster appconfig.ClusterConfig) appconfig.UserConfig {
 	user := appconfig.UserConfig{}
 	username := ""
-	if entryName := prompts.ValidatedPrompt("(optional)User entry name:", func(input string) error {
+	if entryName := prompts.ValidatedPrompt("(optional)User entry name", func(input string) error {
 		if len(input) == 0 {
 			return nil
 		} else {
@@ -104,7 +104,7 @@ func CreateUserEntry(conf appconfig.AppConfig, cluster appconfig.ClusterConfig) 
 	} else {
 		log.Println("User entry name will be generated automatically")
 	}
-	if userName := prompts.ValidatedPrompt("Username:", func(input string) error {
+	if userName := prompts.ValidatedPrompt("Username", func(input string) error {
 		if len(input) == 0 {
 			return fmt.Errorf("username is required")
 		}
@@ -116,7 +116,7 @@ func CreateUserEntry(conf appconfig.AppConfig, cluster appconfig.ClusterConfig) 
 	}
 	user.Name = fmt.Sprintf("%s@%s", username, cluster.Name)
 	user.User = appconfig.User{
-		Token: creds.PushToKeyring(username, prompts.SecretPrompt("Password:")),
+		Token: creds.PushToKeyring(username, prompts.SecretPrompt("Password")),
 	}
 	return user
 }

@@ -67,9 +67,8 @@ func ValidatedPrompt(label string, validate func(input string) error) string {
 
 func SecretPrompt(label string) string {
 	prompt := promptui.Prompt{
-		Label:     label,
-		Mask:      '*',
-		IsConfirm: true,
+		Label: label,
+		Mask:  '*',
 	}
 	run, err := prompt.Run()
 	if err != nil {

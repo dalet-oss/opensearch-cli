@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 Sergei Iakovlev syakovlev@dalet.com
 */
-package cmd
+package ccr
 
 import (
 	"fmt"

@@ -4,7 +4,7 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/appconfig"
 	"crypto/tls"
 	"fmt"
-	"github.com/opensearch-project/opensearch-go"
+	"github.com/opensearch-project/opensearch-go/v4"
 	"net/http"
 )
 

@@ -126,7 +126,9 @@ func (c *AppConfig) GetActiveContext() *ContextConfig {
 }
 
 func (c *AppConfig) Push(cluster ClusterConfig, user UserConfig, ctx ContextConfig) {
-
+	c.pushCluster(cluster)
+	c.pushUser(user)
+	c.pushContext(ctx)
 }
 
 func (c *AppConfig) pushCluster(e ClusterConfig) {
