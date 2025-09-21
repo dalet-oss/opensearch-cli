@@ -16,22 +16,22 @@ import (
 	"strings"
 )
 
+// TODO:
+// Flags:
+// -c, --cluster string   cluster url
+// -u, --user string      user name
+// -p, --password string  password
+//
+// Example:
+// opensearch-cli ctx add -c https://localhost:9200 -u admin -p admin
+//
+// If flags are not passed, it will prompt for the values
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:     "add",
 	Aliases: []string{"create", "a"},
 	Short:   "Creates a new context",
-	Long: `Creates a new context in the config file using interactive mode or flags.
-Flags:
--c, --cluster string   cluster url
--u, --user string      user name
--p, --password string  password
-
-Example:
-opensearch-cli ctx add -c https://localhost:9200 -u admin -p admin
-
-If flags are not passed, it will prompt for the values
-	`,
+	Long:    `Creates a new context in the config file using interactive mode`,
 	Run: func(cmd *cobra.Command, args []string) {
 		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
 		config := configutils.LoadConfig(appConfigFile)
