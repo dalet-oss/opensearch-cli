@@ -12,7 +12,6 @@ func NewCtxCmd() *cobra.Command {
 	ctxCmd.AddCommand(addCmd)
 	ctxCmd.AddCommand(ctxCurrentCmd)
 	ctxCmd.AddCommand(ctxListCmd)
-	ctxCmd.AddCommand(ctxRemoveCmd)
 	ctxCmd.AddCommand(ctxSwitchCmd)
 	ctxCmd.AddCommand(ctxViewCmd)
 

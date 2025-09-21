@@ -14,10 +14,11 @@ import (
 var ctxCurrentCmd = &cobra.Command{
 	Use:   "show",
 	Short: "show active context information.",
-	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
 		config := configutils.LoadConfig(appConfigFile)
 		fmt.Println(config.ShowContextInfo(config.Current))
+		fmt.Println()
+		fmt.Println("Legend:\n\t✅ - entry found in the configuration file.\n\t❌ - entry not found in the configuration file. ")
 	},
 }

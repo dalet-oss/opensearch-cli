@@ -21,12 +21,12 @@ const (
 func bootstrapAndGet() string {
 	dir, homeDirErr := os.UserHomeDir()
 	if homeDirErr != nil {
-		log.Fatalf("Unable to get user home dir:%v", homeDirErr)
+		log.Fatalf("❌Unable to get user home dir:%v", homeDirErr)
 	}
 	configPathDir := path.Join(dir, DataDir, Tooldir)
 	err := os.MkdirAll(configPathDir, 0755)
 	if err != nil {
-		log.Fatalf("Unable to create config dir:%v", err)
+		log.Fatalf("❌Unable to create config dir:%v", err)
 	}
 	return configPathDir
 }

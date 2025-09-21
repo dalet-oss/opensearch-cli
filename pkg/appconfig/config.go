@@ -47,6 +47,29 @@ func (c *AppConfig) ShowContextInfo(name string) string {
 	return strings.Join(info, "\n")
 }
 
+func (c *AppConfig) ShowContextInfoExtended(name string) string {
+	info := []string{}
+	if ctx := c.GetContext(name); ctx != nil {
+		info = append(info, fmt.Sprintf("Context:%s", name))
+		if cluster := c.GetCluster(ctx.Cluster); cluster != nil {
+			info = append(info, fmt.Sprintf("	Cluster: %s", cluster.Name))
+			info = append(info, fmt.Sprintf("		Server: %s", cluster.Params.Server))
+			info = append(info, fmt.Sprintf("		TLS: %t", cluster.Params.Tls))
+		} else {
+			info = append(info, "	❌cluster is not found")
+		}
+		if user := c.GetUser(ctx.User); user != nil {
+			info = append(info, fmt.Sprintf("	User: %s", user.Name))
+			info = append(info, fmt.Sprintf("		Token: %s", user.User.Token))
+		} else {
+			info = append(info, fmt.Sprintf("	❌User is not found: %s", ctx.User))
+		}
+	} else {
+		info = append(info, fmt.Sprintf("❌Context is not found: %s", name))
+	}
+	return strings.Join(info, "\n")
+}
+
 func (c *AppConfig) GetCluster(name string) *ClusterConfig {
 	if idx := slices.IndexFunc(c.Clusters, func(p ClusterConfig) bool {
 		return p.Name == name
@@ -123,6 +146,14 @@ func (c *AppConfig) ListContexts() {
 		fmt.Println(c.ShowContextInfo(ctx.Name))
 	}
 	fmt.Println("Current context: ", c.Current)
+}
+
+func (c *AppConfig) GetContextList() []string {
+	ctxs := []string{}
+	for _, ctx := range c.Contexts {
+		ctxs = append(ctxs, ctx.Name)
+	}
+	return ctxs
 }
 
 // Example returns an example AppConfig.

@@ -4,22 +4,37 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package ctx
 
 import (
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/appconfig"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
+	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/prompts"
 	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
 // ctxSwitchCmd represents the switch command
 var ctxSwitchCmd = &cobra.Command{
 	Use:   "switch",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "switches to a context.",
+	Long: `
+Switch to active context to the one chosen by the user.
+If context name is not provided, it will prompt for the context name(from the list of contexts).
+`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("switch called")
+		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
+		config := configutils.LoadConfig(appConfigFile)
+		if len(args) > 0 {
+			if config.HasContext(appconfig.ContextConfig{Name: args[0]}) {
+				config.Current = args[0]
+			} else {
+				fmt.Println(fmt.Sprintf("requested context '%s' is not found.", args[0]))
+				return
+			}
+		} else {
+			config.Current = prompts.SelectivePrompt("Select context", config.GetContextList())
+		}
+		if !configutils.SaveConfig(appConfigFile, config) {
+			fmt.Println("❌Failed to save config file. Please try again.")
+		}
 	},
 }
