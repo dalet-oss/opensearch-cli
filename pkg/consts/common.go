@@ -13,6 +13,8 @@ const (
 	DataDir       = ".dalet"
 	Tooldir       = "oscli"
 	ConfigFile    = "config"
+	// Flag constants
+	ConfigFlag = "config"
 )
 
 // bootstrapAndGet bootstraps the config dir and returns the path to it.
