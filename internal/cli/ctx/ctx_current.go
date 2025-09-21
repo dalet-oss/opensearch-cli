@@ -4,6 +4,7 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package ctx
 
 import (
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
 	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
 	"fmt"
 	"github.com/spf13/cobra"
@@ -15,7 +16,8 @@ var ctxCurrentCmd = &cobra.Command{
 	Short: "show active context information.",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := configutils.LoadConfig("")
+		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
+		config := configutils.LoadConfig(appConfigFile)
 		fmt.Println(config.ShowContextInfo(config.Current))
 	},
 }

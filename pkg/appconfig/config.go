@@ -1,6 +1,7 @@
 package appconfig
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 )
@@ -29,18 +30,19 @@ type AppConfig struct {
 func (c *AppConfig) ShowContextInfo(name string) string {
 	info := []string{}
 	if ctx := c.GetContext(name); ctx != nil {
+		info = append(info, fmt.Sprintf("✅Context: %s", name))
 		if cluster := c.GetCluster(ctx.Cluster); cluster != nil {
-			info = append(info, "✅Cluster: ", cluster.Name)
+			info = append(info, fmt.Sprintf("	✅Cluster: %s", cluster.Name))
 		} else {
-			info = append(info, "❌Cluster: ", ctx.Cluster)
+			info = append(info, fmt.Sprintf("	❌Cluster: %s", ctx.Cluster))
 		}
 		if user := c.GetUser(ctx.User); user != nil {
-			info = append(info, "✅User: ", user.Name)
+			info = append(info, fmt.Sprintf("	✅User: %s", user.Name))
 		} else {
-			info = append(info, "❌User: ", ctx.User)
+			info = append(info, fmt.Sprintf("	❌User: %s", ctx.User))
 		}
 	} else {
-		info = append(info, "❌Context: ", name)
+		info = append(info, fmt.Sprintf("❌Context: %s", name))
 	}
 	return strings.Join(info, "\n")
 }
@@ -114,6 +116,13 @@ func (c *AppConfig) pushUser(e UserConfig) {
 
 func (c *AppConfig) pushContext(e ContextConfig) {
 	c.Contexts = append(c.Contexts, e)
+}
+
+func (c *AppConfig) ListContexts() {
+	for _, ctx := range c.Contexts {
+		fmt.Println(c.ShowContextInfo(ctx.Name))
+	}
+	fmt.Println("Current context: ", c.Current)
 }
 
 // Example returns an example AppConfig.

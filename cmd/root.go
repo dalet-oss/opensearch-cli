@@ -39,6 +39,6 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().String("config", "", "config file (default is $HOME/.opensearch-cli.yaml)")
+	rootCmd.PersistentFlags().String("config", "", "config file (default is $HOME/.dalet/oscli/config)")
 	rootCmd.AddCommand(ctx.NewCtxCmd())
 }

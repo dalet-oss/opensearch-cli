@@ -5,6 +5,7 @@ package ctx
 
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/appconfig"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
 	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/creds"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/prompts"
@@ -32,7 +33,8 @@ opensearch-cli ctx add -c https://localhost:9200 -u admin -p admin
 If flags are not passed, it will prompt for the values
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := configutils.LoadConfig("")
+		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
+		config := configutils.LoadConfig(appConfigFile)
 		newCluster := CreateClusterEntry(config)
 		user := CreateUserEntry(config, newCluster)
 		ctx := CreateContextEntry(config, newCluster, user)
@@ -40,7 +42,7 @@ If flags are not passed, it will prompt for the values
 		if prompts.IsOk(prompts.QuestionPrompt("Do you want to switch to the created context?")) {
 			config.Current = ctx.Name
 		}
-		if !configutils.SaveConfig("", config) {
+		if !configutils.SaveConfig(appConfigFile, config) {
 			creds.DeleteFromKeyring(user.User.Token)
 		}
 	},
