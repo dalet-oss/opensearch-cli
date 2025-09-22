@@ -26,15 +26,23 @@ type IndexInfoResponse []IndexInfo
 // exposed [to the lib code] only the _cat/indices endpoint
 // docs: https://docs.opensearch.org/2.19/api-reference/cat/cat-indices/
 func (api *OpensearchWrapper) GetIndexList() IndexInfoResponse {
+	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	defer cancelFunc()
 	request := opensearchapi.CatIndicesReq{Params: opensearchapi.CatIndicesParams{}}
 	responseData := IndexInfoResponse{}
-	_, err := api.Client.Do(context.Background(), request, &responseData)
-	if err != nil {
+	if _, err := api.Client.Do(ctx, request, &responseData); err != nil {
 		log.Fatal(err)
 	}
 	return responseData
 }
 
 func (api *OpensearchWrapper) DeleteIndex(indexName string) {
-
+	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	defer cancelFunc()
+	var result interface{}
+	rsp, e := api.Client.Do(ctx, opensearchapi.IndicesDeleteReq{Indices: []string{indexName}}, &result)
+	if e != nil {
+		log.Fatal(e)
+	}
+	log.Println(rsp)
 }

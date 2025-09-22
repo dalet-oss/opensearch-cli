@@ -5,6 +5,7 @@ import "github.com/spf13/cobra"
 func NewIndexCmd() *cobra.Command {
 	// subcommands
 	indexCmd.AddCommand(indexListCmd)
+	indexCmd.AddCommand(indexDeleteCmd)
 	return indexCmd
 }
 
