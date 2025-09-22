@@ -17,19 +17,6 @@ type IndexReplicationStatsParams struct {
 	Verbose bool
 }
 
-type IndexReplicationStatusResponse struct {
-	Status         string `json:"status"`
-	Reason         string `json:"reason"`
-	LeaderAlias    string `json:"leader_alias"`
-	LeaderIndex    string `json:"leader_index"`
-	FollowerIndex  string `json:"follower_index"`
-	SyncingDetails struct {
-		LeaderCheckpoint   int `json:"leader_checkpoint"`
-		FollowerCheckpoint int `json:"follower_checkpoint"`
-		SeqNo              int `json:"seq_no"`
-	} `json:"syncing_details"`
-}
-
 func (p IndexReplicationStatsParams) get() map[string]string {
 	params := make(map[string]string)
 	if p.Verbose {
@@ -47,4 +34,17 @@ func (r IndexReplicationStatsReq) GetRequest() (*http.Request, error) {
 		r.Params.get(),
 		r.Header,
 	)
+}
+
+type IndexReplicationStatsResponse struct {
+	Status         string `json:"status"`
+	Reason         string `json:"reason"`
+	LeaderAlias    string `json:"leader_alias"`
+	LeaderIndex    string `json:"leader_index"`
+	FollowerIndex  string `json:"follower_index"`
+	SyncingDetails struct {
+		LeaderCheckpoint   int `json:"leader_checkpoint"`
+		FollowerCheckpoint int `json:"follower_checkpoint"`
+		SeqNo              int `json:"seq_no"`
+	} `json:"syncing_details"`
 }

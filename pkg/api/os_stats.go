@@ -14,7 +14,7 @@ import (
 func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) {
 	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
 	defer cancelFunc()
-	var result IndexReplicationStatusResponse
+	var result IndexReplicationStatsResponse
 	_, err := api.Client.Do(ctx, IndexReplicationStatsReq{Index: indexName, Params: IndexReplicationStatsParams{Verbose: true}}, &result)
 	if err != nil {
 		log.Fatal(err)
