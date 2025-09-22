@@ -8,8 +8,6 @@ import (
 	"strings"
 )
 
-// TODO: DOC
-
 // GetStatsLag retrieves and displays replication lag statistics for a specified index.
 // function wraps the following opensearch-go API call:
 // https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#get-replication-status
@@ -45,6 +43,9 @@ func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) {
 	}
 }
 
+// GetReplicationLeaderStats retrieves and displays replication leader statistics for all indices.
+// function wraps the following opensearch-go API call:
+// https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#get-leader-cluster-stats
 func (api *OpensearchWrapper) GetReplicationLeaderStats(raw bool) {
 	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
 	defer cancelFunc()
@@ -61,6 +62,9 @@ func (api *OpensearchWrapper) GetReplicationLeaderStats(raw bool) {
 	}
 }
 
+// GetReplicationFollowerStats retrieves and displays replication follower statistics for all indices.
+// function wraps the following opensearch-go API call:
+// https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#get-follower-cluster-stats
 func (api *OpensearchWrapper) GetReplicationFollowerStats(raw bool) {
 	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
 	defer cancelFunc()
@@ -77,11 +81,14 @@ func (api *OpensearchWrapper) GetReplicationFollowerStats(raw bool) {
 	}
 }
 
+// GetReplicationAutofollowStats retrieves and displays replication autofollow statistics for all indices.
+// function wraps the following opensearch-go API call:
+// https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#get-auto-follow-stats
 func (api *OpensearchWrapper) GetReplicationAutofollowStats(raw bool) {
 	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
 	defer cancelFunc()
 
-	var result tstats.ReplicationAutofollowStatsResponse
+	var result tstats.ReplicationAutoFollowStatsResponse
 	_, err := api.Client.Do(ctx, tstats.IndexReplicationAutoFollowStatsReq{}, &result)
 	if err != nil {
 		log.Fatal(err)

@@ -1,5 +1,6 @@
 package stats
 
+// IndexReplicationStatsResponse represents the response for getting replication stats for a specified index.
 type IndexReplicationStatsResponse struct {
 	Status         string `json:"status"`
 	Reason         string `json:"reason"`
@@ -13,6 +14,7 @@ type IndexReplicationStatsResponse struct {
 	} `json:"syncing_details"`
 }
 
+// ReplicationLeaderStatsResponse represents the response for getting replication leader statistics for all indices.
 type ReplicationLeaderStatsResponse struct {
 	NumReplicatedIndices        int                                    `json:"num_replicated_indices"`
 	OperationsRead              int                                    `json:"operations_read"`
@@ -25,6 +27,7 @@ type ReplicationLeaderStatsResponse struct {
 	IndexStats                  map[string]ReplicationLeaderIndexStats `json:"index_stats"`
 }
 
+// ReplicationLeaderIndexStats represents the response for getting replication leader statistics for a single index.
 type ReplicationLeaderIndexStats struct {
 	OperationsRead              int `json:"operations_read"`
 	TranslogSizeBytes           int `json:"translog_size_bytes"`
@@ -35,6 +38,7 @@ type ReplicationLeaderIndexStats struct {
 	BytesRead                   int `json:"bytes_read"`
 }
 
+// ReplicationFollowerStatsResponse represents the response for getting replication follower statistics for all indices.
 type ReplicationFollowerStatsResponse struct {
 	NumSyncingIndices       int                                      `json:"num_syncing_indices"`
 	NumBootstrappingIndices int                                      `json:"num_bootstrapping_indices"`
@@ -54,6 +58,7 @@ type ReplicationFollowerStatsResponse struct {
 	IndexStats              map[string]ReplicationFollowerIndexStats `json:"index_stats"`
 }
 
+// ReplicationFollowerIndexStats represents the response for getting replication follower statistics for a single index.
 type ReplicationFollowerIndexStats struct {
 	OperationsWritten      int `json:"operations_written"`
 	OperationsRead         int `json:"operations_read"`
@@ -66,17 +71,21 @@ type ReplicationFollowerIndexStats struct {
 	TotalWriteTimeMillis   int `json:"total_write_time_millis"`
 }
 
-type ReplicationAutofollowStatsResponse struct {
+// ReplicationAutoFollowStatsResponse represents the response for getting replication auto-follow statistics for all indices.
+type ReplicationAutoFollowStatsResponse struct {
+	NumSuccessStartReplication int               `json:"num_success_start_replication"`
+	NumFailedStartReplication  int               `json:"num_failed_start_replication"`
+	NumFailedLeaderCalls       int               `json:"num_failed_leader_calls"`
+	FailedIndices              []interface{}     `json:"failed_indices"`
+	AutofollowStats            []AutoFollowStats `json:"autofollow_stats"`
+}
+
+// AutoFollowStats represents the response for getting replication auto-follow statistics for a single index.
+type AutoFollowStats struct {
+	Name                       string        `json:"name"`
+	Pattern                    string        `json:"pattern"`
 	NumSuccessStartReplication int           `json:"num_success_start_replication"`
 	NumFailedStartReplication  int           `json:"num_failed_start_replication"`
 	NumFailedLeaderCalls       int           `json:"num_failed_leader_calls"`
 	FailedIndices              []interface{} `json:"failed_indices"`
-	AutofollowStats            []struct {
-		Name                       string        `json:"name"`
-		Pattern                    string        `json:"pattern"`
-		NumSuccessStartReplication int           `json:"num_success_start_replication"`
-		NumFailedStartReplication  int           `json:"num_failed_start_replication"`
-		NumFailedLeaderCalls       int           `json:"num_failed_leader_calls"`
-		FailedIndices              []interface{} `json:"failed_indices"`
-	} `json:"autofollow_stats"`
 }

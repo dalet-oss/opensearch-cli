@@ -13,10 +13,12 @@ type IndexReplicationStatsReq struct {
 	Params IndexReplicationStatsParams
 }
 
+// IndexReplicationStatsParams represents the parameters for getting replication stats for a specified index.
 type IndexReplicationStatsParams struct {
 	Verbose bool
 }
 
+// get returns the map of query parameters for the request.
 func (p IndexReplicationStatsParams) get() map[string]string {
 	params := make(map[string]string)
 	if p.Verbose {
@@ -36,12 +38,12 @@ func (r IndexReplicationStatsReq) GetRequest() (*http.Request, error) {
 	)
 }
 
-//
-
+// IndexReplicationLeaderStatsReq is a request type for fetching replication leader statistics for all indices.
 type IndexReplicationLeaderStatsReq struct {
 	Header http.Header
 }
 
+// GetRequest returns the *http.Request that gets executed by the client
 func (r IndexReplicationLeaderStatsReq) GetRequest() (*http.Request, error) {
 	return opensearch.BuildRequest(
 		"GET",
@@ -52,10 +54,12 @@ func (r IndexReplicationLeaderStatsReq) GetRequest() (*http.Request, error) {
 	)
 }
 
+// IndexReplicationFollowerStatsReq is a request type for fetching replication follower statistics for all indices.
 type IndexReplicationFollowerStatsReq struct {
 	Header http.Header
 }
 
+// GetRequest returns the *http.Request that gets executed by the client
 func (r IndexReplicationFollowerStatsReq) GetRequest() (*http.Request, error) {
 	return opensearch.BuildRequest(
 		"GET",
@@ -66,10 +70,12 @@ func (r IndexReplicationFollowerStatsReq) GetRequest() (*http.Request, error) {
 	)
 }
 
+// IndexReplicationAutoFollowStatsReq is a request type for fetching replication auto-follow statistics for all indices.
 type IndexReplicationAutoFollowStatsReq struct {
 	Header http.Header
 }
 
+// GetRequest returns the *http.Request that gets executed by the client
 func (r IndexReplicationAutoFollowStatsReq) GetRequest() (*http.Request, error) {
 	return opensearch.BuildRequest(
 		"GET",
