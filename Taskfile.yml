@@ -1,0 +1,72 @@
+version: '3'
+
+vars:
+  BINARY_NAME: oscli
+  OUTPUT_DIR: dist
+  PLATFORMS:
+    - os: linux
+      arch:
+        - amd64
+        - arm64
+    - os: darwin
+      arch:
+        - amd64
+        - arm64
+
+tasks:
+  default:
+    desc: List all available tasks
+    cmds:
+      - task --list
+
+  prepare:
+    desc: prepare dir
+    cmd:  mkdir -p {{ .OUTPUT_DIR }}
+    silent: true
+  build-darwin:
+    deps: [prepare]
+    cmds:
+      - for:
+          matrix:
+            GOOS: [ 'darwin' ]
+            GOARCH: [ 'amd64', 'arm64' ]
+        cmd:
+          GOOS={{ .ITEM.GOOS }} GOARCH={{ .ITEM.GOARCH }} go build -o {{ .OUTPUT_DIR }}/{{ .BINARY_NAME }}-{{ .ITEM.GOOS }}-{{ .ITEM.GOARCH }}{{ if eq .ITEM.GOOS "windows" }}.exe{{ end }} .
+    silent: true
+  build-linux:
+    deps: [prepare]
+    cmds:
+      - for:
+          matrix:
+            GOOS: [ 'linux']
+            GOARCH: [ 'amd64', 'arm64' ]
+        cmd:
+          GOOS={{ .ITEM.GOOS }} GOARCH={{ .ITEM.GOARCH }} go build -o {{ .OUTPUT_DIR }}/{{ .BINARY_NAME }}-{{ .ITEM.GOOS }}-{{ .ITEM.GOARCH }}{{ if eq .ITEM.GOOS "windows" }}.exe{{ end }} .
+    silent: true
+  build-win:
+    deps: [prepare]
+    cmds:
+      - for:
+          matrix:
+            GOOS: [ 'windows' ]
+            GOARCH: [ 'amd64' ]
+        cmd:
+          GOOS={{ .ITEM.GOOS }} GOARCH={{ .ITEM.GOARCH }} go build -o {{ .OUTPUT_DIR }}/{{ .BINARY_NAME }}_{{ .ITEM.GOOS }}_{{ .ITEM.GOARCH }}{{ if eq .ITEM.GOOS "windows" }}.exe{{ end }} .
+    silent: true
+  build-all:
+    deps: [prepare,build-darwin,build-linux,build-win]
+    desc: Build the application for a specific platform and architecture
+    cmd:
+      echo building bins
+    silent: true
+
+  clean:
+    desc: Remove build artifacts
+    cmds:
+      - rm -rf {{ .OUTPUT_DIR }}
+    silent: true
+
+  test:
+    desc: Run tests for the application
+    cmds:
+      - go test ./...
