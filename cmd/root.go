@@ -6,6 +6,7 @@ package cmd
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/ctx"
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/index"
+	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/stats"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -36,4 +37,6 @@ func init() {
 	rootCmd.PersistentFlags().String("config", "", "config file (default is $HOME/.dalet/oscli/config)")
 	rootCmd.AddCommand(ctx.NewCtxCmd())
 	rootCmd.AddCommand(index.NewIndexCmd())
+	rootCmd.AddCommand(stats.NewStatsCmd())
+
 }

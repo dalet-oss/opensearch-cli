@@ -9,7 +9,7 @@ import (
 
 func NewStatsCmd() *cobra.Command {
 	// subcommands
-	statsCmd.AddCommand()
+	statsCmd.AddCommand(lagCmd)
 	return statsCmd
 }
 
