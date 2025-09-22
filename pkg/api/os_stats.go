@@ -1,12 +1,14 @@
 package api
 
 import (
+	tstats "bitbucket.org/ooyalaflex/opensearch-cli/pkg/api/types/stats"
+	printutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/print"
 	"context"
-	"encoding/json"
-	"fmt"
 	"log"
 	"strings"
 )
+
+// TODO: DOC
 
 // GetStatsLag retrieves and displays replication lag statistics for a specified index.
 // function wraps the following opensearch-go API call:
@@ -14,34 +16,79 @@ import (
 func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) {
 	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
 	defer cancelFunc()
-	var result IndexReplicationStatsResponse
-	_, err := api.Client.Do(ctx, IndexReplicationStatsReq{Index: indexName, Params: IndexReplicationStatsParams{Verbose: true}}, &result)
+	var result tstats.IndexReplicationStatsResponse
+	_, err := api.Client.Do(ctx, tstats.IndexReplicationStatsReq{Index: indexName, Params: tstats.IndexReplicationStatsParams{Verbose: true}}, &result)
 	if err != nil {
 		log.Fatal(err)
 	}
 	if raw {
-		bytes, err := json.MarshalIndent(result, "", "    ")
-		if err != nil {
-			log.Fatal(err)
-		}
+		bytes := printutils.MarshalJSONOrDie(result)
 		log.Printf("\n%s\n", bytes)
 	} else {
 		switch strings.ToUpper(result.Status) {
 		case "SYNCING":
-			fmt.Println("replication is in sync")
-			fmt.Printf("lag value (follower_checkpoint - leader_checkpoint):%d", result.SyncingDetails.FollowerCheckpoint-result.SyncingDetails.LeaderCheckpoint)
+			log.Println("replication is in sync")
+			log.Println("lag value (follower_checkpoint - leader_checkpoint):%d", result.SyncingDetails.FollowerCheckpoint-result.SyncingDetails.LeaderCheckpoint)
 		case "BOOTSTRAPING":
-			fmt.Println("replication is in bootstrap mode")
+			log.Println("replication is in bootstrap mode")
 		case "PAUSED":
-			fmt.Println("replication is paused")
+			log.Println("replication is paused")
 		case "REPLICATION NOT IN PROGRESS":
-			fmt.Println("replication is not in progress")
+			log.Println("replication is not in progress")
 		case "FAILED":
-			fmt.Printf("replication failed for index '%s'\nreason:\n%s", indexName, result.Reason)
+			log.Fatalf("replication failed for index '%s'\nreason:\n%s", indexName, result.Reason)
 
 		default:
-			fmt.Println("replication status is unknown")
+			log.Fatal("replication status is unknown")
 
 		}
+	}
+}
+
+func (api *OpensearchWrapper) GetReplicationLeaderStats(raw bool) {
+	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	defer cancelFunc()
+
+	var result tstats.ReplicationLeaderStatsResponse
+	_, err := api.Client.Do(ctx, tstats.IndexReplicationLeaderStatsReq{}, &result)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if raw {
+		log.Printf("\n%s\n", printutils.MarshalJSONOrDie(result))
+	} else {
+		// TODO: implement
+	}
+}
+
+func (api *OpensearchWrapper) GetReplicationFollowerStats(raw bool) {
+	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	defer cancelFunc()
+
+	var result tstats.ReplicationFollowerStatsResponse
+	_, err := api.Client.Do(ctx, tstats.IndexReplicationFollowerStatsReq{}, &result)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if raw {
+		log.Printf("\n%s\n", printutils.MarshalJSONOrDie(result))
+	} else {
+		// TODO: implement
+	}
+}
+
+func (api *OpensearchWrapper) GetReplicationAutofollowStats(raw bool) {
+	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	defer cancelFunc()
+
+	var result tstats.ReplicationAutofollowStatsResponse
+	_, err := api.Client.Do(ctx, tstats.IndexReplicationAutoFollowStatsReq{}, &result)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if raw {
+		log.Printf("\n%s\n", printutils.MarshalJSONOrDie(result))
+	} else {
+		// TODO: implement
 	}
 }

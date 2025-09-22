@@ -7,12 +7,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var autofollowCmd = &cobra.Command{
+var autofollowRstatsCmd = &cobra.Command{
 	Use:   "autofollow",
 	Short: "show autofollow information.",
 	Run: func(cmd *cobra.Command, args []string) {
 		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
-		_ = api.New(configutils.LoadConfig(appConfigFile))
-		//client.GetStatsLag()
+		client := api.New(configutils.LoadConfig(appConfigFile))
+		showRawResp, _ := cmd.Flags().GetBool(RawFlag)
+		client.GetReplicationAutofollowStats(showRawResp)
 	},
+}
+
+func init() {
+	autofollowRstatsCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
 }
