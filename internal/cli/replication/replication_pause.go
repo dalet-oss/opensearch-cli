@@ -13,6 +13,10 @@ var replicationPauseCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
 		client := api.New(configutils.LoadConfig(appConfigFile))
+		showRawResp, _ := cmd.Flags().GetBool(RawFlag)
+		if showRawResp {
+		}
+		client.PauseReplication()
 	},
 }
 

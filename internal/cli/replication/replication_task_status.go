@@ -14,7 +14,9 @@ var replicationTaskStatusCmd = &cobra.Command{
 		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
 		client := api.New(configutils.LoadConfig(appConfigFile))
 		showRawResp, _ := cmd.Flags().GetBool(RawFlag)
-		client.GetReplicationLeaderStats(showRawResp)
+		if showRawResp {
+		}
+		client.TaskStatusReplication()
 	},
 }
 
