@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "splitArgsTask",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "echo '[\"'$(echo '${input:cliArgs}' | tr ' ' '\",\"')'\"]'"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false
+            },
+            "problemMatcher": []
+        }
+    ]
+}
