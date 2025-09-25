@@ -21,3 +21,11 @@ func GetBoolFlag(flagSet *pflag.FlagSet, flagName string) bool {
 	}
 	return value
 }
+
+func GetNotEmptyStringFlag(flagSet *pflag.FlagSet, flagName string) string {
+	flagValue := GetStringFlag(flagSet, flagName)
+	if flagValue == "" {
+		log.Fatalf("flag '--%s' is required to be non-empty value", flagName)
+	}
+	return flagValue
+}

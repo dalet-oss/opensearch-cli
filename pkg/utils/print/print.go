@@ -15,7 +15,7 @@ func MarshalJSONOrDie[T any](marshallable T) []byte {
 	return bytes
 }
 
-func PrintRawResponse(r *opensearch.Response) {
+func RawResponse(r *opensearch.Response) {
 	bodyBytes, readErr := io.ReadAll(r.Body)
 	if readErr != nil {
 		log.Fatalf("fail to read response body:%v", readErr)

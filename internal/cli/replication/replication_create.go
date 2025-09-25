@@ -8,7 +8,6 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"log"
 )
 
 const (
@@ -35,32 +34,17 @@ var replicationCreateCmd = &cobra.Command{
 // prepareReplicationCall gather options from cli required args to start replication
 // TODO: interactive mode if no args supplied
 func prepareReplicationCall(flags *pflag.FlagSet, client *api.OpensearchWrapper) replication.StartReplicationReq {
-	opts := replication.StartReplicationReq{}
-	if indexName := flagutils.GetStringFlag(flags, IndexNameFlag); indexName != "" {
-		opts.Index = indexName
-	} else {
-		log.Fatalf("--%s is required", IndexNameFlag)
-	}
-	if leaderName := flagutils.GetStringFlag(flags, LeaderAliasFlag); leaderName != "" {
-		opts.Body = replication.StartReplicationBody{LeaderAlias: leaderName}
-	} else {
-		log.Fatalf("--%s is required", LeaderAliasFlag)
-	}
-	if leaderIndex := flagutils.GetStringFlag(flags, LeaderIndexFlag); leaderIndex != "" {
-		opts.Body.LeaderIndex = leaderIndex
-	} else {
-		log.Fatalf("--%s is required", LeaderIndexFlag)
+	opts := replication.StartReplicationReq{
+		Index: flagutils.GetNotEmptyStringFlag(flags, IndexNameFlag),
+		Body: replication.StartReplicationBody{
+			LeaderAlias: flagutils.GetNotEmptyStringFlag(flags, LeaderAliasFlag),
+			LeaderIndex: flagutils.GetNotEmptyStringFlag(flags, LeaderIndexFlag),
+		},
 	}
 	if api.HasPlugin(client.PluginsList(), api.SecurityPlugin) {
-		if leaderRole := flagutils.GetStringFlag(flags, LeaderClusterRoleFlag); leaderRole != "" {
-			opts.Body.UseRoles = replication.ReplicationRoles{LeaderClusterRole: leaderRole}
-		} else {
-			log.Fatalf("--%s is required because security plugin enabled", LeaderClusterRoleFlag)
-		}
-		if followerRole := flagutils.GetStringFlag(flags, FollowerClusterRoleFlag); followerRole != "" {
-			opts.Body.UseRoles.FollowerClusterRole = followerRole
-		} else {
-			log.Fatalf("--%s is required because security plugin enabled", FollowerClusterRoleFlag)
+		opts.Body.UseRoles = replication.ReplicationRoles{
+			LeaderClusterRole:   flagutils.GetNotEmptyStringFlag(flags, LeaderClusterRoleFlag),
+			FollowerClusterRole: flagutils.GetNotEmptyStringFlag(flags, FollowerClusterRoleFlag),
 		}
 	}
 	return opts
