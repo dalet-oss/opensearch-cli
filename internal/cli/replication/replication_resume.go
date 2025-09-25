@@ -12,8 +12,6 @@ import (
 	"sort"
 )
 
-const RawFlag = "raw"
-
 var replicationResumeCmd = &cobra.Command{
 	Use:   "resume",
 	Short: "resume replication",
@@ -32,11 +30,11 @@ var replicationResumeCmd = &cobra.Command{
 		} else {
 			replicationIndex = args[0]
 		}
-		client.ResumeReplication(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), RawFlag))
+		client.ResumeReplication(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag))
 
 	},
 }
 
 func init() {
-	replicationResumeCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
+	replicationResumeCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
 }

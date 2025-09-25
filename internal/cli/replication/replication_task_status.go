@@ -24,7 +24,7 @@ var replicationTaskStatusCmd = &cobra.Command{
 			flagutils.GetStringFlag(cmd.Flags(), IndexNameFlag),
 			flagutils.GetBoolFlag(cmd.Flags(), DetailedFlag),
 			flagutils.GetBoolFlag(cmd.Flags(), TableFlag),
-			flagutils.GetBoolFlag(cmd.Flags(), RawFlag))
+			flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag))
 	},
 }
 
@@ -32,5 +32,5 @@ func init() {
 	replicationTaskStatusCmd.PersistentFlags().Bool(DetailedFlag, false, "show detailed info about tasks.")
 	replicationTaskStatusCmd.PersistentFlags().Bool(TableFlag, false, "show info as table")
 	replicationTaskStatusCmd.PersistentFlags().String(IndexNameFlag, "", "show tasks for the index.")
-	replicationTaskStatusCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
+	replicationTaskStatusCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
 }

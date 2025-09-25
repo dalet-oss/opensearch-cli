@@ -5,9 +5,11 @@ package cmd
 
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli"
+	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/ccr"
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/ctx"
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/index"
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/stats"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -35,9 +37,13 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().String("config", "", "config file (default is $HOME/.dalet/oscli/config)")
+	// global flags
+	rootCmd.PersistentFlags().String(consts.ConfigFlag, "", "config file (default is $HOME/.dalet/oscli/config)")
+	rootCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
+	// subcommands
 	rootCmd.AddCommand(ctx.NewCtxCmd())
 	rootCmd.AddCommand(index.NewIndexCmd())
 	rootCmd.AddCommand(stats.NewStatsCmd())
+	rootCmd.AddCommand(ccr.NewCCRCmd())
 	rootCmd.AddCommand(cli.NewClusterCmd())
 }

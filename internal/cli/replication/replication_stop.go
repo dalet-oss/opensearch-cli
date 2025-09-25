@@ -30,10 +30,10 @@ var replicationStopCmd = &cobra.Command{
 		} else {
 			replicationIndex = args[0]
 		}
-		client.StopReplication(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), RawFlag))
+		client.StopReplication(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag))
 	},
 }
 
 func init() {
-	replicationStopCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
+	replicationStopCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
 }

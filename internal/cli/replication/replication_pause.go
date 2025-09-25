@@ -31,10 +31,10 @@ var replicationPauseCmd = &cobra.Command{
 		} else {
 			replicationIndex = args[0]
 		}
-		client.PauseReplication(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), RawFlag))
+		client.PauseReplication(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag))
 	},
 }
 
 func init() {
-	replicationPauseCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
+	replicationPauseCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
 }

@@ -27,7 +27,7 @@ var replicationCreateCmd = &cobra.Command{
 				flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
 		)
 		options := prepareReplicationCall(cmd.Flags(), client)
-		client.CreateReplication(options, flagutils.GetBoolFlag(cmd.Flags(), RawFlag))
+		client.CreateReplication(options, flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag))
 	},
 }
 
@@ -56,5 +56,5 @@ func init() {
 	replicationCreateCmd.PersistentFlags().String(LeaderIndexFlag, "", "leader index")
 	replicationCreateCmd.PersistentFlags().String(LeaderClusterRoleFlag, "", "[mandatory if security plugin enabled]leader cluster role")
 	replicationCreateCmd.PersistentFlags().String(FollowerClusterRoleFlag, "", "[mandatory if security plugin enabled]follower cluster role")
-	replicationCreateCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
+	replicationCreateCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
 }

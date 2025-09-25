@@ -13,8 +13,12 @@ const (
 	DataDir       = ".dalet"
 	Tooldir       = "oscli"
 	ConfigFile    = "config"
-	// Flag constants
+
+	// ConfigFlag used to override path to the cli config
 	ConfigFlag = "config"
+	// RawFlag signals to print raw API response from the OpenSearch cluster
+	RawFlag                   = "raw"
+	DefaultRemoteClusterAlias = "pyramid-replication"
 )
 
 // bootstrapAndGet bootstraps the config dir and returns the path to it.
