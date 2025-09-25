@@ -4,6 +4,7 @@ Copyright © 2025 Sergei Iakovlev syakovlev@dalet.com
 package cmd
 
 import (
+	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli"
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/ctx"
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/index"
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/stats"
@@ -38,5 +39,5 @@ func init() {
 	rootCmd.AddCommand(ctx.NewCtxCmd())
 	rootCmd.AddCommand(index.NewIndexCmd())
 	rootCmd.AddCommand(stats.NewStatsCmd())
-
+	rootCmd.AddCommand(cli.NewClusterCmd())
 }

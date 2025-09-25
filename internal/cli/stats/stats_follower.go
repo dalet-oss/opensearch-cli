@@ -4,6 +4,7 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
 	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
 	"github.com/spf13/cobra"
 )
 
@@ -11,10 +12,13 @@ var followerRStatsCmd = &cobra.Command{
 	Use:   "follower",
 	Short: "show follower replication stats.",
 	Run: func(cmd *cobra.Command, args []string) {
-		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
-		client := api.New(configutils.LoadConfig(appConfigFile))
-		showRawResp, _ := cmd.Flags().GetBool(RawFlag)
-		client.GetReplicationFollowerStats(showRawResp)
+		api.New(
+			configutils.LoadConfig(
+				flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
+		).
+			GetReplicationFollowerStats(
+				flagutils.GetBoolFlag(cmd.Flags(), RawFlag),
+			)
 	},
 }
 

@@ -5,6 +5,7 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
 	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
 	"github.com/spf13/cobra"
+	"log"
 )
 
 var replicationTaskStatusCmd = &cobra.Command{
@@ -17,6 +18,7 @@ var replicationTaskStatusCmd = &cobra.Command{
 		if showRawResp {
 		}
 		client.TaskStatusReplication()
+		log.Fatal("not implemented")
 	},
 }
 

@@ -4,6 +4,7 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
 	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/fp"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/prompts"
 	"fmt"
@@ -18,9 +19,11 @@ var lagCmd = &cobra.Command{
 	Use:   "lag",
 	Short: "show lag information for a specific index.",
 	Run: func(cmd *cobra.Command, args []string) {
-		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
 		replicationIndex := ""
-		client := api.New(configutils.LoadConfig(appConfigFile))
+		client := api.New(
+			configutils.LoadConfig(
+				flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
+		)
 		if len(args) == 0 || args[0] == "" {
 			log.Println("index name is required")
 			registeredIndices := client.GetIndexList()
@@ -33,8 +36,7 @@ var lagCmd = &cobra.Command{
 		} else {
 			replicationIndex = args[0]
 		}
-		showRawResp, _ := cmd.Flags().GetBool(RawFlag)
-		client.GetStatsLag(replicationIndex, showRawResp)
+		client.GetStatsLag(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), RawFlag))
 	},
 }
 

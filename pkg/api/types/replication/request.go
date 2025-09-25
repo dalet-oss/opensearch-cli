@@ -8,6 +8,7 @@ import (
 	"net/http"
 )
 
+// StartReplicationReq request type for https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#start-replication
 type StartReplicationReq struct {
 	Header http.Header
 	Index  string
@@ -16,12 +17,13 @@ type StartReplicationReq struct {
 type StartReplicationBody struct {
 	LeaderAlias string `json:"leader_alias"`
 	LeaderIndex string `json:"leader_index"`
-	// TODO: think of gathering this info automatically from the cluster
 	// UseRoles mandatory if security plugin enabled
-	UseRoles struct {
-		LeaderClusterRole   string `json:"leader_cluster_role"`
-		FollowerClusterRole string `json:"follower_cluster_role"`
-	} `json:"use_roles,omitempty"`
+	UseRoles ReplicationRoles `json:"use_roles,omitempty"`
+}
+
+type ReplicationRoles struct {
+	LeaderClusterRole   string `json:"leader_cluster_role"`
+	FollowerClusterRole string `json:"follower_cluster_role"`
 }
 
 // GetRequest returns the *http.Request that gets executed by the client
