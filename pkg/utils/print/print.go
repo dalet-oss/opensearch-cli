@@ -20,7 +20,7 @@ func RawResponse(r *opensearch.Response) {
 	if readErr != nil {
 		log.Fatalf("fail to read response body:%v", readErr)
 	} else {
-		log.Printf("[code:%d] %s", r.StatusCode, bodyBytes)
+		log.Printf("[code:%d]\n%s", r.StatusCode, bodyBytes)
 	}
 
 }

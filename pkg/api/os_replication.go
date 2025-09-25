@@ -5,6 +5,7 @@ import (
 	tstats "bitbucket.org/ooyalaflex/opensearch-cli/pkg/api/types/stats"
 	printutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/print"
 	"context"
+	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
 	"log"
 )
 
@@ -82,4 +83,25 @@ func (api *OpensearchWrapper) StatusReplication(indexName string, raw bool) {
 		}
 	}
 }
-func (api *OpensearchWrapper) TaskStatusReplication() {}
+func (api *OpensearchWrapper) TaskStatusReplication(index string, detailed, table, raw bool) {
+	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	defer cancelFunc()
+	query := opensearchapi.CatRecoveryReq{Params: opensearchapi.CatRecoveryParams{
+		ActiveOnly: opensearchapi.ToPointer(true),
+		Detailed:   opensearchapi.ToPointer(detailed),
+		V:          opensearchapi.ToPointer(table),
+	}}
+	if len(index) > 0 {
+		query.Indices = []string{index}
+	}
+	result := opensearchapi.CatRecoveryResp{}
+	if rsp, err := api.Client.Do(ctx, nil, &result); err != nil {
+		log.Fatal(err)
+	} else {
+		if raw {
+			printutils.RawResponse(rsp)
+		} else {
+			log.Printf("recovery status:%v", printutils.MarshalJSONOrDie(result))
+		}
+	}
+}

@@ -4,24 +4,33 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
 	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
 	"github.com/spf13/cobra"
-	"log"
+)
+
+const (
+	DetailedFlag = "detailed"
+	TableFlag    = "table"
 )
 
 var replicationTaskStatusCmd = &cobra.Command{
 	Use:   "task-status",
-	Short: "show leader replication stats.",
+	Short: "show replication task status",
 	Run: func(cmd *cobra.Command, args []string) {
-		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
-		client := api.New(configutils.LoadConfig(appConfigFile))
-		showRawResp, _ := cmd.Flags().GetBool(RawFlag)
-		if showRawResp {
-		}
-		client.TaskStatusReplication()
-		log.Fatal("not implemented")
+		api.New(
+			configutils.LoadConfig(
+				flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
+		).TaskStatusReplication(
+			flagutils.GetStringFlag(cmd.Flags(), IndexNameFlag),
+			flagutils.GetBoolFlag(cmd.Flags(), DetailedFlag),
+			flagutils.GetBoolFlag(cmd.Flags(), TableFlag),
+			flagutils.GetBoolFlag(cmd.Flags(), RawFlag))
 	},
 }
 
 func init() {
+	replicationTaskStatusCmd.PersistentFlags().Bool(DetailedFlag, false, "show detailed info about tasks.")
+	replicationTaskStatusCmd.PersistentFlags().Bool(TableFlag, false, "show info as table")
+	replicationTaskStatusCmd.PersistentFlags().String(IndexNameFlag, "", "show tasks for the index.")
 	replicationTaskStatusCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
 }
