@@ -12,7 +12,7 @@ import (
 	"sort"
 )
 
-var statusReplicationCmd = &cobra.Command{
+var replicationStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "show replication status.",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -35,5 +35,5 @@ var statusReplicationCmd = &cobra.Command{
 }
 
 func init() {
-	statusReplicationCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
+	replicationStatusCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
 }

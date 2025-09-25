@@ -14,7 +14,7 @@ import (
 
 const RawFlag = "raw"
 
-var resumeReplicationCmd = &cobra.Command{
+var replicationResumeCmd = &cobra.Command{
 	Use:   "resume",
 	Short: "resume replication",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -38,5 +38,5 @@ var resumeReplicationCmd = &cobra.Command{
 }
 
 func init() {
-	resumeReplicationCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
+	replicationResumeCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
 }
