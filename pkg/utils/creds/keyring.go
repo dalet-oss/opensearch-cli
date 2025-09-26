@@ -3,9 +3,11 @@ package creds
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/types"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/zalando/go-keyring"
 	"log"
+	"strings"
 )
 
 // PushToKeyring stores the encoded user credentials in the system's keyring under a unique identifier and service name.
@@ -28,7 +30,8 @@ func DeleteFromKeyring(id string) {
 
 // PullFromKeyring retrieves the encoded user credentials from the system's keyring under a unique identifier and service name.'
 func PullFromKeyring(id string) types.Creds {
-	secret, err := keyring.Get(consts.ServiceName, id)
+	secretId := strings.Replace(id, fmt.Sprintf("%s-", KeyringPrefix), "", 1)
+	secret, err := keyring.Get(consts.ServiceName, secretId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -41,5 +44,5 @@ func BuildKeyringPair(username, password string) (id string, keyringEntry string
 	if err != nil {
 		log.Fatal(err)
 	}
-	return v7.String(), encodeCreds(username, password)
+	return fmt.Sprintf("%s-%s", KeyringPrefix, v7.String()), encodeCreds(username, password)
 }
