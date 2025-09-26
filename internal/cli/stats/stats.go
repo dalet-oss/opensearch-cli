@@ -9,10 +9,12 @@ import (
 
 func NewStatsCmd() *cobra.Command {
 	// subcommands
-	statsCmd.AddCommand(lagCmd)
-	statsCmd.AddCommand(autofollowRstatsCmd)
-	statsCmd.AddCommand(leaderRStatsCmd)
-	statsCmd.AddCommand(followerRStatsCmd)
+	statsCmd.AddCommand(
+		lagCmd,
+		autofollowRstatsCmd,
+		leaderRStatsCmd,
+		followerRStatsCmd,
+	)
 	return statsCmd
 }
 

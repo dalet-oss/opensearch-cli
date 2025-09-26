@@ -9,11 +9,13 @@ import (
 
 func NewCtxCmd() *cobra.Command {
 	// subcommands
-	ctxCmd.AddCommand(addCmd)
-	ctxCmd.AddCommand(ctxCurrentCmd)
-	ctxCmd.AddCommand(ctxListCmd)
-	ctxCmd.AddCommand(ctxSwitchCmd)
-	ctxCmd.AddCommand(ctxViewCmd)
+	ctxCmd.AddCommand(
+		addCmd,
+		ctxCurrentCmd,
+		ctxListCmd,
+		ctxSwitchCmd,
+		ctxViewCmd,
+	)
 
 	return ctxCmd
 }

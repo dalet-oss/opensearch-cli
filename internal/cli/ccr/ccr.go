@@ -6,9 +6,11 @@ package ccr
 import "github.com/spf13/cobra"
 
 func NewCCRCmd() *cobra.Command {
-	ccrCmd.AddCommand(ccrCreateCmd)
-	ccrCmd.AddCommand(ccrGetCmd)
-	ccrCmd.AddCommand(ccrDeleteCmd)
+	ccrCmd.AddCommand(
+		ccrCreateCmd,
+		ccrGetCmd,
+		ccrDeleteCmd,
+	)
 	return ccrCmd
 }
 

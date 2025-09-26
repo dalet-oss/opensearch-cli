@@ -9,12 +9,14 @@ import (
 
 func NewReplicationCmd() *cobra.Command {
 	// subcommands
-	replicationCmd.AddCommand(replicationCreateCmd)
-	replicationCmd.AddCommand(replicationPauseCmd)
-	replicationCmd.AddCommand(replicationStopCmd)
-	replicationCmd.AddCommand(replicationResumeCmd)
-	replicationCmd.AddCommand(replicationStatusCmd)
-	replicationCmd.AddCommand(replicationTaskStatusCmd)
+	replicationCmd.AddCommand(
+		replicationCreateCmd,
+		replicationPauseCmd,
+		replicationStopCmd,
+		replicationResumeCmd,
+		replicationStatusCmd,
+		replicationTaskStatusCmd,
+	)
 	return replicationCmd
 }
 
