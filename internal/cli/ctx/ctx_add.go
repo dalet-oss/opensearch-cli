@@ -8,6 +8,7 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
 	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/creds"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/prompts"
 	"fmt"
 	"github.com/spf13/cobra"
@@ -33,7 +34,7 @@ var addCmd = &cobra.Command{
 	Short:   "Creates a new context",
 	Long:    `Creates a new context in the config file using interactive mode`,
 	Run: func(cmd *cobra.Command, args []string) {
-		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
+		appConfigFile := flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)
 		config := configutils.LoadConfig(appConfigFile)
 		newCluster := CreateClusterEntry(config)
 		user := CreateUserEntry(config, newCluster)

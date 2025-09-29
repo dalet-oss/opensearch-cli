@@ -27,6 +27,7 @@ var ctxCmd = &cobra.Command{
 	Short:   "manage contexts, clusters and users.",
 	Long:    ``,
 	Run: func(cmd *cobra.Command, args []string) {
+
 		if cmd.HasAvailableSubCommands() {
 			cmd.Help()
 		}

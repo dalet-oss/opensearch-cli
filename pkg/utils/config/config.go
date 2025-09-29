@@ -52,6 +52,8 @@ func Init(example bool) {
 		}
 		if example {
 			writeFile(defaultConfig, configBytes(appconfig.Example()))
+		} else {
+			writeFile(defaultConfig, configBytes(appconfig.AppConfig{ApiVersion: appconfig.ApiVersionV1}))
 		}
 
 	}
@@ -62,7 +64,9 @@ func LoadConfig(path string) appconfig.AppConfig {
 	if len(path) > 0 {
 		configPath = path
 	}
-	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+	if _, err := os.Stat(configPath); os.IsNotExist(err) && configPath == consts.DefaultConfig() {
+		Init(false)
+	} else if os.IsNotExist(err) {
 		log.Fatalf("config file not found:%v", err)
 	}
 	if fileContent, err := os.ReadFile(configPath); err != nil {

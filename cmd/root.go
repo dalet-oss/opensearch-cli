@@ -12,6 +12,8 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/replication"
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/stats"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -20,13 +22,14 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "opensearch-cli",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "manage OpenSearch clusters and their indices.",
+	Run: func(cmd *cobra.Command, args []string) {
+		// init things
+		if flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag) == "" {
+			config.Init(false)
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+		}
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
