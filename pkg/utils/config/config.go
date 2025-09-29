@@ -81,5 +81,8 @@ func SaveConfig(path string, config appconfig.AppConfig) bool {
 }
 
 func CreateApiContext(cmd *cobra.Command) context.Context {
-	return context.WithValue(cmd.Context(), consts.VaultPasswordFlag, flagutils.GetStringFlag(cmd.Flags(), consts.VaultPasswordFlag))
+	if cmd.Flags().Lookup(consts.VaultPasswordFlag).Changed {
+		return context.WithValue(cmd.Context(), consts.VaultPasswordFlag, flagutils.GetStringFlag(cmd.Flags(), consts.VaultPasswordFlag))
+	}
+	return cmd.Context()
 }

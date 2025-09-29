@@ -2,8 +2,6 @@ package stats
 
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api"
-	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
-	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/fp"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/prompts"

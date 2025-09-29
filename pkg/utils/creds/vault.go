@@ -8,7 +8,7 @@ import (
 )
 
 func GetDataFromVaultString(vaultString, decryptPass, userKey, passKey string) (*types.Creds, error) {
-	var vaultYaml map[string]interface{}
+	vaultYaml := make(map[string]interface{})
 	result := new(types.Creds)
 	decryptedString, decryptErr := vault.Decrypt(vaultString, decryptPass)
 	if decryptErr != nil {
@@ -32,7 +32,7 @@ func GetDataFromVaultString(vaultString, decryptPass, userKey, passKey string) (
 }
 
 func GetDataFromVaultFile(vaultFile, decryptPass, userKey, passKey string) (*types.Creds, error) {
-	var vaultYaml map[string]interface{}
+	vaultYaml := make(map[string]interface{})
 	result := new(types.Creds)
 	fileContent, decryptErr := vault.DecryptFile(vaultFile, decryptPass)
 	if decryptErr != nil {

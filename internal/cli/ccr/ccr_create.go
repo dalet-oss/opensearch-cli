@@ -3,7 +3,6 @@ package ccr
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
-	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"

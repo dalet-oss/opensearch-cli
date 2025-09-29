@@ -33,11 +33,11 @@ type VaultConfig struct {
 	// Path to the ansible-vault encrypted file with credentials.
 	File string `yaml:"file"`
 	// VaultString vault file content [optional, if file is not provided]
-	VaultString string `yaml:"vault_string,omitempty"`
+	VaultString string `yaml:"vaultString,omitempty"`
 	// Username the key contains the username in the file
-	Username string `yaml:"username"`
+	Username string `yaml:"userKey"`
 	// Password the key contains the password in the file
-	Password string `yaml:"password"`
+	Password string `yaml:"passKey"`
 }
 
 type CredentialsExec struct {
