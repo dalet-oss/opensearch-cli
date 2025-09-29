@@ -9,6 +9,7 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/ccr"
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/ctx"
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/index"
+	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/replication"
 	"bitbucket.org/ooyalaflex/opensearch-cli/internal/cli/stats"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
 	"os"
@@ -50,5 +51,6 @@ func init() {
 		ccr.NewCCRCmd(),
 		cli.NewClusterCmd(),
 		autofollow.NewAutofollowCmd(),
+		replication.NewReplicationCmd(),
 	)
 }

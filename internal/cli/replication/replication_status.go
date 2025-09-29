@@ -1,4 +1,4 @@
-package stats
+package replication
 
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api"

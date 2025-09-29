@@ -1,7 +1,7 @@
 /*
 Copyright © 2025 Sergei Iakovlev syakovlev@dalet.com
 */
-package stats
+package replication
 
 import (
 	"github.com/spf13/cobra"
