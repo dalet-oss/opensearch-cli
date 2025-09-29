@@ -27,6 +27,12 @@ func writeFile(path string, data []byte) {
 	}
 }
 func writeFileResult(path string, data []byte) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		_, err := os.Create(path)
+		if err != nil {
+			log.Fatalf("unable to create config file:%v", err)
+		}
+	}
 	writeErr := os.WriteFile(path, data, ConfigFilePerm)
 	if writeErr != nil {
 		log.Printf("unable to write config file:%v", writeErr)
