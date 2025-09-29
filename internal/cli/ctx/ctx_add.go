@@ -71,7 +71,7 @@ func CreateClusterEntry(conf appconfig.AppConfig) appconfig.ClusterConfig {
 			Server: clusterUrl,
 		}
 	}
-	if enableTls := prompts.ValidatedPrompt("Enable TLS(t|true|f|false):", func(input string) error {
+	if enableTls := prompts.ValidatedPrompt("Skip TLS verify(t|true|f|false)", func(input string) error {
 		_, err := strconv.ParseBool(input)
 		return err
 	}); len(enableTls) == 0 {

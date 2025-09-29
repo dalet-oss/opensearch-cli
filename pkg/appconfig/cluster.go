@@ -13,5 +13,5 @@ type ClusterParams struct {
 	// Server holds the cluster server address.
 	Server string `yaml:"server"`
 	// Tls indicates whether TLS encryption is enabled for the cluster connection.
-	Tls bool `yaml:"tls"`
+	Tls bool `yaml:"skipTlsVerify"`
 }
