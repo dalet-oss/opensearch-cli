@@ -20,10 +20,7 @@ var lagCmd = &cobra.Command{
 	Short: "show lag information for a specific index.",
 	Run: func(cmd *cobra.Command, args []string) {
 		replicationIndex := ""
-		client := api.New(
-			configutils.LoadConfig(
-				flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
-		)
+		client := api.NewFromCmd(cmd)
 		if len(args) == 0 || args[0] == "" {
 			log.Println("index name is required")
 			registeredIndices := client.GetIndexList()

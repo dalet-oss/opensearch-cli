@@ -2,10 +2,14 @@ package api
 
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/appconfig"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
+	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
 	printutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/print"
 	"context"
 	"github.com/opensearch-project/opensearch-go/v4"
 	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
+	"github.com/spf13/cobra"
 	"log"
 	"time"
 )
@@ -19,9 +23,16 @@ type OpensearchWrapper struct {
 	Config appconfig.AppConfig
 }
 
-func New(c appconfig.AppConfig) *OpensearchWrapper {
+func NewFromCmd(cmd *cobra.Command) *OpensearchWrapper {
+	return New(
+		configutils.LoadConfig(flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
+		configutils.CreateApiContext(cmd),
+	)
+}
+
+func New(c appconfig.AppConfig, ctx context.Context) *OpensearchWrapper {
 	return &OpensearchWrapper{
-		Client: GetOpenSearchClient(c),
+		Client: GetOpenSearchClient(c, ctx),
 		Config: c,
 	}
 }

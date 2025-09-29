@@ -19,9 +19,9 @@ func encodeb64(s string) string {
 }
 
 // decodeCreds decodes the base64 encoded user credentials into a user credentials object.
-func decodeCreds(creds string) types.Creds {
+func decodeCreds(creds string) *types.Creds {
 	parts := strings.Split(creds, consts.CredSeparator)
-	return types.Creds{
+	return &types.Creds{
 		Username: decodeb64(parts[0]),
 		Password: decodeb64(parts[1]),
 	}

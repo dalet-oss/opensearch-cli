@@ -22,10 +22,7 @@ var replicationCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "start replication thing",
 	Run: func(cmd *cobra.Command, args []string) {
-		client := api.New(
-			configutils.LoadConfig(
-				flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
-		)
+		client := api.NewFromCmd(cmd)
 		options := prepareReplicationCall(cmd.Flags(), client)
 		client.CreateReplication(options, flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag))
 	},

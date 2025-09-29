@@ -3,6 +3,9 @@ package config
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/appconfig"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
+	"context"
+	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 	"log"
 	"os"
@@ -75,4 +78,8 @@ func SaveConfig(path string, config appconfig.AppConfig) bool {
 		configPath = path
 	}
 	return writeFileResult(configPath, configBytes(config))
+}
+
+func CreateApiContext(cmd *cobra.Command) context.Context {
+	return context.WithValue(cmd.Context(), consts.VaultPasswordFlag, flagutils.GetStringFlag(cmd.Flags(), consts.VaultPasswordFlag))
 }

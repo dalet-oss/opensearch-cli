@@ -2,8 +2,6 @@ package index
 
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api"
-	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
-	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/fp"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/prompts"
 	"fmt"
@@ -20,9 +18,8 @@ var indexDeleteCmd = &cobra.Command{
 	Short: "⚠️deletes index.",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
 		// method
-		client := api.New(configutils.LoadConfig(appConfigFile))
+		client := api.NewFromCmd(cmd)
 		indexToDelete := ""
 		registeredIndices := client.GetIndexList()
 		indexNames := fp.Map(registeredIndices, func(info api.IndexInfo) string {

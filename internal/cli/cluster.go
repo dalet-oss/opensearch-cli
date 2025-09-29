@@ -2,8 +2,6 @@ package cli
 
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api"
-	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
-	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
 	"fmt"
 	"github.com/spf13/cobra"
 )
@@ -20,9 +18,7 @@ var clusterCmd = &cobra.Command{
 	Short:   "stub for tests | experiments",
 	Long:    ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
-		config := configutils.LoadConfig(appConfigFile)
-		client := api.New(config)
+		client := api.NewFromCmd(cmd)
 		client.ClusterSettings()
 		plugins := client.PluginsList()
 		fmt.Println(api.HasPlugin(plugins, api.SecurityPlugin))

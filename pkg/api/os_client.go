@@ -2,6 +2,7 @@ package api
 
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/appconfig"
+	"context"
 	"crypto/tls"
 	"fmt"
 	"github.com/opensearch-project/opensearch-go/v4"
@@ -11,7 +12,7 @@ import (
 // BuildOSConfig constructs and returns an OpenSearch configuration based on the given app configuration.
 // It retrieves the active context, cluster, and user details, and incorporates user credentials into the configuration.
 // The function panics if required elements like contexts, clusters, or users are missing or invalid.
-func BuildOSConfig(c appconfig.AppConfig) opensearch.Config {
+func BuildOSConfig(c appconfig.AppConfig, ctx context.Context) opensearch.Config {
 	var ccfg *appconfig.ContextConfig
 	ccfg = c.GetActiveContext()
 	if ccfg == nil {
@@ -25,7 +26,7 @@ func BuildOSConfig(c appconfig.AppConfig) opensearch.Config {
 	if osUser == nil {
 		panic(fmt.Sprintf("user definition '%s' is not found", ccfg.User))
 	}
-	userCreds, err := osUser.GetUserCredentials()
+	userCreds, err := osUser.GetUserCredentials(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -43,8 +44,8 @@ func BuildOSConfig(c appconfig.AppConfig) opensearch.Config {
 }
 
 // GetOpenSearchClient returns an OpenSearch client based on the given app configuration.
-func GetOpenSearchClient(c appconfig.AppConfig) *opensearch.Client {
-	config := BuildOSConfig(c)
+func GetOpenSearchClient(c appconfig.AppConfig, ctx context.Context) *opensearch.Client {
+	config := BuildOSConfig(c, ctx)
 	client, err := opensearch.NewClient(config)
 	if err != nil {
 		// todo: handle error

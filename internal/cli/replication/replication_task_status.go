@@ -17,10 +17,7 @@ var replicationTaskStatusCmd = &cobra.Command{
 	Use:   "task-status",
 	Short: "show replication task status",
 	Run: func(cmd *cobra.Command, args []string) {
-		api.New(
-			configutils.LoadConfig(
-				flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
-		).TaskStatusReplication(
+		api.NewFromCmd(cmd).TaskStatusReplication(
 			flagutils.GetStringFlag(cmd.Flags(), IndexNameFlag),
 			flagutils.GetBoolFlag(cmd.Flags(), DetailedFlag),
 			flagutils.GetBoolFlag(cmd.Flags(), TableFlag),

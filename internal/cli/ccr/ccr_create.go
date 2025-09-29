@@ -20,9 +20,7 @@ var ccrCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create ccr object in the cluster",
 	Run: func(cmd *cobra.Command, args []string) {
-		api.New(
-			configutils.LoadConfig(
-				flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag))).
+		api.NewFromCmd(cmd).
 			ConfigureRemoteCluster(prepareOpts(cmd.Flags()), flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag))
 	},
 }

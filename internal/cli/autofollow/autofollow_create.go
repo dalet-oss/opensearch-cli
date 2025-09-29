@@ -4,7 +4,6 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api/types/replication"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
-	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -15,9 +14,7 @@ var autofollowCreateCmd = &cobra.Command{
 	Aliases: []string{"update"},
 	Short:   "Create or update autofollow rule in the cluster",
 	Run: func(cmd *cobra.Command, args []string) {
-		client := api.New(
-			configutils.LoadConfig(
-				flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)))
+		client := api.NewFromCmd(cmd)
 		client.
 			CreateAutofollowRule(prepareAutofollowOpts(cmd.Flags(), client), flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag))
 	},

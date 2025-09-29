@@ -40,6 +40,7 @@ func Execute() {
 func init() {
 	// global flags
 	rootCmd.PersistentFlags().String(consts.ConfigFlag, "", "config file (default is $HOME/.dalet/oscli/config)")
+	rootCmd.PersistentFlags().String(consts.VaultPasswordFlag, "", "vault password for decrypting vault credentials")
 	rootCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
 	// subcommands
 	rootCmd.AddCommand(

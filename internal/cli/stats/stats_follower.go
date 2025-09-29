@@ -12,10 +12,7 @@ var followerRStatsCmd = &cobra.Command{
 	Use:   "follower",
 	Short: "show follower replication stats.",
 	Run: func(cmd *cobra.Command, args []string) {
-		api.New(
-			configutils.LoadConfig(
-				flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
-		).
+		api.NewFromCmd(cmd).
 			GetReplicationFollowerStats(
 				flagutils.GetBoolFlag(cmd.Flags(), RawFlag),
 			)

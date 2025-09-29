@@ -12,10 +12,7 @@ var autofollowRstatsCmd = &cobra.Command{
 	Use:   "autofollow",
 	Short: "show autofollow information.",
 	Run: func(cmd *cobra.Command, args []string) {
-		api.New(
-			configutils.LoadConfig(
-				flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
-		).
+		api.NewFromCmd(cmd).
 			GetReplicationAutofollowStats(
 				flagutils.GetBoolFlag(cmd.Flags(), RawFlag),
 			)

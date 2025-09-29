@@ -12,10 +12,7 @@ var leaderRStatsCmd = &cobra.Command{
 	Use:   "leader",
 	Short: "show leader replication stats.",
 	Run: func(cmd *cobra.Command, args []string) {
-		api.New(
-			configutils.LoadConfig(
-				flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
-		).GetReplicationLeaderStats(
+		api.NewFromCmd(cmd).GetReplicationLeaderStats(
 			flagutils.GetBoolFlag(cmd.Flags(), RawFlag),
 		)
 	},

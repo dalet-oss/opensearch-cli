@@ -16,7 +16,7 @@ var replicationResumeCmd = &cobra.Command{
 	Use:   "resume",
 	Short: "resume replication",
 	Run: func(cmd *cobra.Command, args []string) {
-		client := api.New(configutils.LoadConfig(flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)))
+		client := api.NewFromCmd(cmd)
 		replicationIndex := ""
 		if len(args) == 0 || args[0] == "" {
 			log.Println("index name is required")

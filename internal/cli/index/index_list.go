@@ -2,8 +2,6 @@ package index
 
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api"
-	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
-	configutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/config"
 	"fmt"
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/slices"
@@ -17,9 +15,8 @@ var indexListCmd = &cobra.Command{
 	Short: "list all indices.",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		appConfigFile, _ := cmd.Flags().GetString(consts.ConfigFlag)
 		// method
-		indices := api.New(configutils.LoadConfig(appConfigFile)).GetIndexList()
+		indices := api.NewFromCmd(cmd).GetIndexList()
 		if v, _ := cmd.Flags().GetBool(FlagAll); !v {
 			indices = slices.DeleteFunc(indices, func(info api.IndexInfo) bool {
 				return strings.HasPrefix(info.Index, ".")
