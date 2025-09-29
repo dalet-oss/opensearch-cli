@@ -23,19 +23,23 @@ func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) {
 		bytes := printutils.MarshalJSONOrDie(result)
 		log.Printf("\n%s\n", bytes)
 	} else {
+		log.Printf("replication status for index '%s':\n", indexName)
 		switch strings.ToUpper(result.Status) {
 		case "SYNCING":
 			log.Println("replication is in sync")
-			log.Println("lag value (follower_checkpoint - leader_checkpoint):%d", result.SyncingDetails.FollowerCheckpoint-result.SyncingDetails.LeaderCheckpoint)
-		case "BOOTSTRAPING":
+			log.Printf("lag value (follower_checkpoint - leader_checkpoint):%d", result.SyncingDetails.FollowerCheckpoint-result.SyncingDetails.LeaderCheckpoint)
+		case "BOOTSTRAPPING":
 			log.Println("replication is in bootstrap mode")
+			log.Printf("reason:%s", result.Reason)
+			log.Printf("lag value (follower_checkpoint - leader_checkpoint):%d", result.SyncingDetails.FollowerCheckpoint-result.SyncingDetails.LeaderCheckpoint)
 		case "PAUSED":
 			log.Println("replication is paused")
+			log.Printf("reason:%s", result.Reason)
 		case "REPLICATION NOT IN PROGRESS":
 			log.Println("replication is not in progress")
+			log.Printf("reason:%s", result.Reason)
 		case "FAILED":
 			log.Fatalf("replication failed for index '%s'\nreason:\n%s", indexName, result.Reason)
-
 		default:
 			log.Fatal("replication status is unknown")
 
