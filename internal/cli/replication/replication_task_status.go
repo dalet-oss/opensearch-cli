@@ -28,5 +28,4 @@ func init() {
 	replicationTaskStatusCmd.PersistentFlags().Bool(DetailedFlag, false, "show detailed info about tasks.")
 	replicationTaskStatusCmd.PersistentFlags().Bool(TableFlag, false, "show info as table")
 	replicationTaskStatusCmd.PersistentFlags().String(IndexNameFlag, "", "show tasks for the index.")
-	replicationTaskStatusCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
 }

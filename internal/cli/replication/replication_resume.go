@@ -33,7 +33,3 @@ var replicationResumeCmd = &cobra.Command{
 
 	},
 }
-
-func init() {
-	replicationResumeCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
-}

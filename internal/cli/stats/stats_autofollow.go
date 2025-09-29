@@ -16,7 +16,3 @@ var autofollowRstatsCmd = &cobra.Command{
 			)
 	},
 }
-
-func init() {
-	autofollowRstatsCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
-}

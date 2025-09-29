@@ -15,7 +15,3 @@ var leaderRStatsCmd = &cobra.Command{
 		)
 	},
 }
-
-func init() {
-	leaderRStatsCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
-}

@@ -16,7 +16,3 @@ var followerRStatsCmd = &cobra.Command{
 			)
 	},
 }
-
-func init() {
-	followerRStatsCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
-}

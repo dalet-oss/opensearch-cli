@@ -2,6 +2,7 @@ package index
 
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/fp"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/prompts"
 	"fmt"
@@ -27,9 +28,7 @@ var indexDeleteCmd = &cobra.Command{
 		})
 		sort.Strings(indexNames)
 		if len(args) == 0 {
-			// todo interactive mode
 			indexToDelete = prompts.SelectivePrompt("Select index for removal", indexNames)
-			return
 		} else {
 			// check if there's index -> delete
 			indexToDelete = args[0]
@@ -40,13 +39,9 @@ var indexDeleteCmd = &cobra.Command{
 			}
 
 		}
-		if prompts.IsOk(prompts.QuestionPrompt(fmt.Sprintf("Are you sure you want to delete index '%s'?", indexToDelete))) {
+		if flagutils.GetBoolFlag(cmd.Flags(), ConfirmFlag) ||
+			prompts.IsOk(prompts.QuestionPrompt(fmt.Sprintf("Are you sure you want to delete index '%s'?", indexToDelete))) {
 			client.DeleteIndex(indexToDelete)
 		}
 	},
-}
-
-func init() {
-	indexListCmd.Flags().Bool(ConfirmFlag, false, "show all indices, including hidden ones(starting with '.').")
-	indexCmd.AddCommand(indexDeleteCmd)
 }

@@ -30,8 +30,3 @@ var indexListCmd = &cobra.Command{
 		}
 	},
 }
-
-func init() {
-	indexListCmd.Flags().Bool(FlagAll, false, "show all indices, including hidden ones(starting with '.').")
-	indexCmd.AddCommand(indexListCmd)
-}

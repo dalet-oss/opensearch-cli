@@ -34,7 +34,3 @@ var lagCmd = &cobra.Command{
 		client.GetStatsLag(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), RawFlag))
 	},
 }
-
-func init() {
-	lagCmd.PersistentFlags().Bool(RawFlag, false, "show raw api response")
-}

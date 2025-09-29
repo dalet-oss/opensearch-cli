@@ -52,5 +52,4 @@ func init() {
 	replicationCreateCmd.PersistentFlags().String(LeaderIndexFlag, "", "leader index")
 	replicationCreateCmd.PersistentFlags().String(LeaderClusterRoleFlag, "", "[mandatory if security plugin enabled]leader cluster role")
 	replicationCreateCmd.PersistentFlags().String(FollowerClusterRoleFlag, "", "[mandatory if security plugin enabled]follower cluster role")
-	replicationCreateCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
 }

@@ -32,7 +32,3 @@ var replicationStatusCmd = &cobra.Command{
 		client.StatusReplication(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag))
 	},
 }
-
-func init() {
-	replicationStatusCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
-}

@@ -32,7 +32,3 @@ var replicationStopCmd = &cobra.Command{
 		client.StopReplication(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag))
 	},
 }
-
-func init() {
-	replicationStopCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
-}

@@ -23,3 +23,8 @@ var indexCmd = &cobra.Command{
 		}
 	},
 }
+
+func init() {
+	indexDeleteCmd.Flags().Bool(ConfirmFlag, false, "delete index without confirmation")
+	indexListCmd.Flags().Bool(FlagAll, false, "show all indices, including hidden ones(starting with '.').")
+}
