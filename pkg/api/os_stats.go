@@ -59,11 +59,7 @@ func (api *OpensearchWrapper) GetReplicationLeaderStats(raw bool) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if raw {
-		log.Printf("\n%s\n", printutils.MarshalJSONOrDie(result))
-	} else {
-		// TODO: implement
-	}
+	log.Printf("\n%s\n", printutils.MarshalJSONOrDie(result))
 }
 
 // GetReplicationFollowerStats retrieves and displays replication follower statistics for all indices.
@@ -78,11 +74,7 @@ func (api *OpensearchWrapper) GetReplicationFollowerStats(raw bool) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if raw {
-		log.Printf("\n%s\n", printutils.MarshalJSONOrDie(result))
-	} else {
-		// TODO: implement
-	}
+	log.Printf("\n%s\n", printutils.MarshalJSONOrDie(result))
 }
 
 // GetReplicationAutofollowStats retrieves and displays replication autofollow statistics for all indices.
@@ -97,9 +89,5 @@ func (api *OpensearchWrapper) GetReplicationAutofollowStats(raw bool) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if raw {
-		log.Printf("\n%s\n", printutils.MarshalJSONOrDie(result))
-	} else {
-		// TODO: implement
-	}
+	log.Printf("\n%s\n", printutils.MarshalJSONOrDie(result))
 }
