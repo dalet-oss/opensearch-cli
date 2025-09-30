@@ -33,7 +33,7 @@ func BuildOSConfig(c appconfig.AppConfig, ctx context.Context) opensearch.Config
 	config := opensearch.Config{
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: !osConnection.Params.Tls,
+				InsecureSkipVerify: osConnection.Params.Tls,
 			},
 		},
 		Addresses: []string{osConnection.Params.Server},
