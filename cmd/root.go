@@ -19,6 +19,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var Version = "dev"
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "opensearch-cli",
@@ -27,7 +29,11 @@ var rootCmd = &cobra.Command{
 		// init things
 		if flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag) == "" {
 			config.Init(false)
-
+		}
+		if flagutils.GetBoolFlag(cmd.Flags(), consts.VersionFlag) {
+			cmd.Printf("Version: %s\n\n", Version)
+		} else {
+			cmd.Help()
 		}
 	},
 }
@@ -43,6 +49,7 @@ func Execute() {
 
 func init() {
 	// global flags
+	rootCmd.PersistentFlags().Bool(consts.VersionFlag, false, "show version")
 	rootCmd.PersistentFlags().String(consts.ConfigFlag, "", "config file (default is $HOME/.dalet/oscli/config)")
 	rootCmd.PersistentFlags().String(consts.VaultPasswordFlag, "", "vault password for decrypting vault credentials")
 	rootCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")

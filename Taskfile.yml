@@ -3,6 +3,9 @@ version: '3'
 vars:
   BINARY_NAME: oscli
   OUTPUT_DIR: dist
+  VERSION:
+    sh: echo $(git describe --tags --always | sed -E 's/([^-]+)-[0-9]+-g(.+)/\1-\2/')
+  VERSION_VAR: bitbucket.org/ooyalaflex/opensearch-cli/cmd.Version
 
 tasks:
   splitArgsTask:
@@ -24,8 +27,10 @@ tasks:
           matrix:
             GOOS: [ 'darwin' ]
             GOARCH: [ 'amd64', 'arm64' ]
-        cmd:
-          GOOS={{ .ITEM.GOOS }} GOARCH={{ .ITEM.GOARCH }} go build -o {{ .OUTPUT_DIR }}/{{ .BINARY_NAME }}-{{ .ITEM.GOOS }}-{{ .ITEM.GOARCH }}{{ if eq .ITEM.GOOS "windows" }}.exe{{ end }} .
+        cmd: |-
+          GOOS={{ .ITEM.GOOS }} GOARCH={{ .ITEM.GOARCH }} \
+          go build -ldflags="-X {{ .VERSION_VAR }}={{ .VERSION }}" \
+          -o {{ .OUTPUT_DIR }}/{{ .BINARY_NAME }}_{{ .ITEM.GOOS }}_{{ .ITEM.GOARCH }}_{{ .VERSION }} .
     silent: true
   build-linux:
     deps: [prepare]
@@ -34,8 +39,10 @@ tasks:
           matrix:
             GOOS: [ 'linux']
             GOARCH: [ 'amd64', 'arm64' ]
-        cmd:
-          GOOS={{ .ITEM.GOOS }} GOARCH={{ .ITEM.GOARCH }} go build -o {{ .OUTPUT_DIR }}/{{ .BINARY_NAME }}-{{ .ITEM.GOOS }}-{{ .ITEM.GOARCH }}{{ if eq .ITEM.GOOS "windows" }}.exe{{ end }} .
+        cmd: |-
+          GOOS={{ .ITEM.GOOS }} GOARCH={{ .ITEM.GOARCH }} \
+          go build -ldflags="-X {{ .VERSION_VAR }}={{ .VERSION }}" \
+          -o {{ .OUTPUT_DIR }}/{{ .BINARY_NAME }}_{{ .ITEM.GOOS }}_{{ .ITEM.GOARCH }}_{{ .VERSION }} .
     silent: true
   build-win:
     deps: [prepare]
@@ -44,8 +51,10 @@ tasks:
           matrix:
             GOOS: [ 'windows' ]
             GOARCH: [ 'amd64' ]
-        cmd:
-          GOOS={{ .ITEM.GOOS }} GOARCH={{ .ITEM.GOARCH }} go build -o {{ .OUTPUT_DIR }}/{{ .BINARY_NAME }}_{{ .ITEM.GOOS }}_{{ .ITEM.GOARCH }}{{ if eq .ITEM.GOOS "windows" }}.exe{{ end }} .
+        cmd: |-
+          GOOS={{ .ITEM.GOOS }} GOARCH={{ .ITEM.GOARCH }} \
+          go build -ldflags="-X {{ .VERSION_VAR }}={{ .VERSION }}" \
+          -o {{ .OUTPUT_DIR }}/{{ .BINARY_NAME }}_{{ .ITEM.GOOS }}_{{ .ITEM.GOARCH }}_{{ .VERSION }}.exe .
     silent: true
   build-all:
     deps: [prepare,build-darwin,build-linux,build-win]

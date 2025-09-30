@@ -18,6 +18,8 @@ const (
 	ConfigFlag = "config"
 	// RawFlag signals to print raw API response from the OpenSearch cluster
 	RawFlag = "raw"
+	// VersionFlag print version of the cli and exit
+	VersionFlag = "version"
 	// VaultPasswordFlag Supply a vault password file to decrypt the vaulted credentials.
 	VaultPasswordFlag         = "vault-password"
 	DefaultRemoteClusterAlias = "pyramid-replication"
