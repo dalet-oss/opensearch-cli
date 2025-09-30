@@ -17,6 +17,13 @@ func IsOk(input string) bool {
 	return slices.Contains(OkChoice, strings.ToLower(input))
 }
 
+func NotEmptyString(s string) error {
+	if len(s) > 0 {
+		return nil
+	}
+	return fmt.Errorf("empty string is not allowed")
+}
+
 func QuestionValidateStd(input string) error {
 	choices := slices.Concat(OkChoice, NoChoice)
 	if len(input) == 0 {

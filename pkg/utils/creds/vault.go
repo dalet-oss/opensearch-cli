@@ -65,3 +65,15 @@ func GetDataFromVaultFile(vaultFile, decryptPass, userKey, passKey string) (*typ
 	}
 	return result, nil
 }
+
+func CreateVault(vaultData map[string]string, vaultPass string) string {
+	vaultYamlBytes, marshallErr := yaml.Marshal(vaultData)
+	if marshallErr != nil {
+		log.Fatalf("fail to marshal content:%v", marshallErr)
+	}
+	vaultString, encryptErr := vault.Encrypt(string(vaultYamlBytes), vaultPass)
+	if encryptErr != nil {
+		log.Fatalf("unable to encrypt vault content:%v", encryptErr)
+	}
+	return vaultString
+}

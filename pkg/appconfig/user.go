@@ -24,6 +24,7 @@ type User struct {
 	// Token represents a security token used for authentication, serialized as "token" in YAML, and omitted if empty.
 	Token string `yaml:"token,omitempty"`
 	// Exec represents a command to execute for authentication, serialized as "exec" in YAML, and omitted if empty.
+	// not implemented yet
 	Exec CredentialsExec `yaml:"exec,omitempty"`
 	// Vault represents a Vault authentication configuration
 	Vault *VaultConfig `yaml:"vault,omitempty"`

@@ -10,6 +10,7 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/creds"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/prompts"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/ux/userconfig"
 	"fmt"
 	"github.com/spf13/cobra"
 	"log"
@@ -37,7 +38,7 @@ var addCmd = &cobra.Command{
 		appConfigFile := flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)
 		config := configutils.LoadConfig(appConfigFile)
 		newCluster := CreateClusterEntry(config)
-		user := CreateUserEntry(config, newCluster)
+		user := userconfig.CreateUserEntry(config, newCluster)
 		ctx := CreateContextEntry(config, newCluster, user)
 		config.Push(newCluster, user, ctx)
 		if prompts.IsOk(prompts.QuestionPrompt("Do you want to switch to the created context?")) {
@@ -52,7 +53,7 @@ var addCmd = &cobra.Command{
 // CreateClusterEntry creates a new cluster entry
 func CreateClusterEntry(conf appconfig.AppConfig) appconfig.ClusterConfig {
 	clusterConfig := appconfig.ClusterConfig{}
-	if clusterName := prompts.ValidatedPrompt("(optional)Cluster name:", func(input string) error {
+	if clusterName := prompts.ValidatedPrompt("(optional)Cluster name", func(input string) error {
 		if len(input) == 0 {
 			return nil
 		} else {
@@ -64,7 +65,7 @@ func CreateClusterEntry(conf appconfig.AppConfig) appconfig.ClusterConfig {
 	}); len(clusterName) > 0 {
 		clusterConfig.Name = clusterName
 	}
-	if clusterUrl := prompts.SimplePrompt("Cluster url:"); len(clusterUrl) == 0 {
+	if clusterUrl := prompts.SimplePrompt("Cluster url"); len(clusterUrl) == 0 {
 		log.Fatal("Cluster url is required")
 	} else {
 		clusterConfig.Params = appconfig.ClusterParams{
@@ -85,41 +86,6 @@ func CreateClusterEntry(conf appconfig.AppConfig) appconfig.ClusterConfig {
 		clusterConfig.Name = strings.ReplaceAll(strings.ReplaceAll(clusterConfig.Params.Server, "://", "::"), ":", "::")
 	}
 	return clusterConfig
-}
-
-// CreateUserEntry creates a new user entry
-func CreateUserEntry(conf appconfig.AppConfig, cluster appconfig.ClusterConfig) appconfig.UserConfig {
-	user := appconfig.UserConfig{}
-	username := ""
-	if entryName := prompts.ValidatedPrompt("(optional)User entry name", func(input string) error {
-		if len(input) == 0 {
-			return nil
-		} else {
-			if conf.HasUser(appconfig.UserConfig{Name: input}) {
-				return fmt.Errorf("user name '%s' already exists", input)
-			}
-		}
-		return nil
-	}); len(entryName) > 0 {
-		user.Name = entryName
-	} else {
-		log.Println("User entry name will be generated automatically")
-	}
-	if userName := prompts.ValidatedPrompt("Username", func(input string) error {
-		if len(input) == 0 {
-			return fmt.Errorf("username is required")
-		}
-		return nil
-	}); len(userName) == 0 {
-		log.Fatal("Username is required")
-	} else {
-		username = userName
-	}
-	user.Name = fmt.Sprintf("%s@%s", username, cluster.Name)
-	user.User = appconfig.User{
-		Token: creds.PushToKeyring(username, prompts.SecretPrompt("Password")),
-	}
-	return user
 }
 
 // CreateContextEntry creates a new context entry
