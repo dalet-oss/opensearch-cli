@@ -27,11 +27,11 @@ func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) {
 		switch strings.ToUpper(result.Status) {
 		case "SYNCING":
 			log.Println("replication is in sync")
-			log.Printf("lag value (follower_checkpoint - leader_checkpoint):%d", result.SyncingDetails.FollowerCheckpoint-result.SyncingDetails.LeaderCheckpoint)
+			log.Printf("lag value (follower_checkpoint - leader_checkpoint): %d", result.SyncingDetails.FollowerCheckpoint-result.SyncingDetails.LeaderCheckpoint)
 		case "BOOTSTRAPPING":
 			log.Println("replication is in bootstrap mode")
 			log.Printf("reason:%s", result.Reason)
-			log.Printf("lag value (follower_checkpoint - leader_checkpoint):%d", result.SyncingDetails.FollowerCheckpoint-result.SyncingDetails.LeaderCheckpoint)
+			log.Printf("lag value (follower_checkpoint - leader_checkpoint): %d", result.SyncingDetails.FollowerCheckpoint-result.SyncingDetails.LeaderCheckpoint)
 		case "PAUSED":
 			log.Println("replication is paused")
 			log.Printf("reason:%s", result.Reason)
