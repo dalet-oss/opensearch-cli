@@ -1,6 +1,7 @@
 package print
 
 import (
+	"bytes"
 	"encoding/json"
 	"github.com/opensearch-project/opensearch-go/v4"
 	"io"
@@ -20,7 +21,13 @@ func RawResponse(r *opensearch.Response) {
 	if readErr != nil {
 		log.Fatalf("fail to read response body:%v", readErr)
 	} else {
-		log.Printf("[code:%d]\n%s", r.StatusCode, bodyBytes)
+		log.Printf("resp code: %d\n", r.StatusCode)
+		var prettyJSON bytes.Buffer
+		if err := json.Indent(&prettyJSON, bodyBytes, "", "    "); err != nil {
+			log.Printf("response:\n%s", bodyBytes)
+		} else {
+			log.Printf("response:\n%s\n", prettyJSON.String())
+		}
 	}
 
 }

@@ -13,8 +13,7 @@ func (api *OpensearchWrapper) CreateAutofollowRule(opts replication.CreateAutofo
 	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
 	defer cancelFunc()
 
-	result := make(map[string]interface{})
-
+	var result interface{}
 	if rsp, err := api.Client.Do(ctx, opts, &result); err != nil {
 		log.Fatal(err)
 	} else {
