@@ -15,11 +15,11 @@ func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) {
 	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
 	defer cancelFunc()
 	var result tstats.IndexReplicationStatsResponse
-	_, err := api.Client.Do(ctx, tstats.IndexReplicationStatsReq{Index: indexName, Params: tstats.IndexReplicationStatsParams{Verbose: true}}, &result)
+	rsp, err := api.Client.Do(ctx, tstats.IndexReplicationStatsReq{Index: indexName, Params: tstats.IndexReplicationStatsParams{Verbose: true}}, &result)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if raw {
+	if raw || rsp.IsError() {
 		bytes := printutils.MarshalJSONOrDie(result)
 		log.Printf("\n%s\n", bytes)
 	} else {

@@ -18,7 +18,7 @@ func (api *OpensearchWrapper) CreateReplication(opts replication.StartReplicatio
 	if rsp, err := api.Client.Do(ctx, opts, &result); err != nil {
 		log.Fatal(err)
 	} else {
-		if raw {
+		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
 			log.Printf("create replication result:\n%s\n", printutils.MarshalJSONOrDie(result))
@@ -33,7 +33,7 @@ func (api *OpensearchWrapper) PauseReplication(indexName string, raw bool) {
 	if rsp, err := api.Client.Do(ctx, replication.PauseReplicationReq{Index: indexName}, &result); err != nil {
 		log.Fatal(err)
 	} else {
-		if raw {
+		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
 			log.Printf("pause replication result:\n%s\n", printutils.MarshalJSONOrDie(result))
@@ -47,7 +47,7 @@ func (api *OpensearchWrapper) ResumeReplication(indexName string, raw bool) {
 	if rsp, err := api.Client.Do(ctx, replication.ResumeReplicationReq{Index: indexName}, &result); err != nil {
 		log.Fatal(err)
 	} else {
-		if raw {
+		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
 			log.Printf("pause replication result:\n%s\n", printutils.MarshalJSONOrDie(result))
@@ -61,7 +61,7 @@ func (api *OpensearchWrapper) StopReplication(indexName string, raw bool) {
 	if rsp, err := api.Client.Do(ctx, replication.StopReplicationReq{Index: indexName}, &result); err != nil {
 		log.Fatal(err)
 	} else {
-		if raw {
+		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
 			log.Printf("stop replication result:\n%s\n", printutils.MarshalJSONOrDie(result))
@@ -76,7 +76,7 @@ func (api *OpensearchWrapper) StatusReplication(indexName string, raw bool) {
 	if rsp, err := api.Client.Do(ctx, params, &result); err != nil {
 		log.Fatal(err)
 	} else {
-		if raw {
+		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
 			log.Printf("replication status for index '%s':\n%s\n", indexName, printutils.MarshalJSONOrDie(result))
@@ -98,7 +98,7 @@ func (api *OpensearchWrapper) TaskStatusReplication(index string, detailed, tabl
 	if rsp, err := api.Client.Do(ctx, nil, &result); err != nil {
 		log.Fatal(err)
 	} else {
-		if raw {
+		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
 			log.Printf("recovery status:%v", printutils.MarshalJSONOrDie(result))

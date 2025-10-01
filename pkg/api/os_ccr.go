@@ -52,7 +52,7 @@ func (api *OpensearchWrapper) ConfigureRemoteCluster(opts CCRCreateOpts, raw boo
 	if rsp, err := api.Client.Do(ctx, params, &result); err != nil {
 		log.Fatal(err)
 	} else {
-		if raw {
+		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
 			log.Printf("Cross-cluster replication creation result:\n%s\n", printutils.MarshalJSONOrDie(result))
@@ -68,7 +68,7 @@ func (api *OpensearchWrapper) GetRemoteSettings(raw bool) {
 	if rsp, err := api.Client.Do(ctx, params, &result); err != nil {
 		log.Fatal(err)
 	} else {
-		if raw {
+		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
 			var persistentSettings map[string]interface{}
@@ -95,7 +95,7 @@ func (api *OpensearchWrapper) DeleteRemote(remoteName string, raw bool) {
 	if rsp, err := api.Client.Do(ctx, params, &result); err != nil {
 		log.Fatal(err)
 	} else {
-		if raw {
+		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
 			log.Printf("Delete remote result:\n%s\n", printutils.MarshalJSONOrDie(result))

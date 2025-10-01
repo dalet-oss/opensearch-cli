@@ -12,12 +12,13 @@ import (
 func (api *OpensearchWrapper) CreateAutofollowRule(opts replication.CreateAutofollowReq, raw bool) {
 	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
 	defer cancelFunc()
-	var result interface{}
+
+	result := make(map[string]interface{})
 
 	if rsp, err := api.Client.Do(ctx, opts, &result); err != nil {
 		log.Fatal(err)
 	} else {
-		if raw {
+		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
 			log.Printf("autofollow rule creation result:\n%s\n", printutils.MarshalJSONOrDie(result))
@@ -36,7 +37,7 @@ func (api *OpensearchWrapper) DeleteAutofollow(opts replication.DeleteAutofollow
 	if rsp, err := api.Client.Do(ctx, opts, &result); err != nil {
 		log.Fatal(err)
 	} else {
-		if raw {
+		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
 			log.Printf("autofollow rule deletion result:\n%s\n", printutils.MarshalJSONOrDie(result))
