@@ -40,7 +40,11 @@ var indexDeleteCmd = &cobra.Command{
 
 		}
 		if flagutils.GetBoolFlag(cmd.Flags(), ConfirmFlag) ||
-			prompts.IsOk(prompts.QuestionPrompt(fmt.Sprintf("Are you sure you want to delete index '%s'?", indexToDelete))) {
+			prompts.IsOk(
+				prompts.QuestionPrompt(
+					fmt.Sprintf(
+						"[context:%s]Are you sure you want to delete index '%s'?", client.Config.Current,
+						indexToDelete))) {
 			client.DeleteIndex(indexToDelete)
 		}
 	},
