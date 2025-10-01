@@ -6,7 +6,7 @@ const (
 	RuleNameFlag            = "name"
 	IndexPatternFlag        = "pattern"
 	LeaderAliasFlag         = "leader"
-	LeaderClusterRoleFlag   = "cluster-role"
+	LeaderClusterRoleFlag   = "leader-cluster-role"
 	FollowerClusterRoleFlag = "follower-cluster-role"
 )
 
