@@ -86,21 +86,22 @@ func (api *OpensearchWrapper) TaskStatusReplication(index string, detailed, tabl
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	query := opensearchapi.CatRecoveryReq{Params: opensearchapi.CatRecoveryParams{
-		ActiveOnly: opensearchapi.ToPointer(true),
+		ActiveOnly: opensearchapi.ToPointer(false),
 		Detailed:   opensearchapi.ToPointer(detailed),
-		V:          opensearchapi.ToPointer(table),
+		V:          opensearchapi.ToPointer(true),
+		Pretty:     true,
 	}}
 	if len(index) > 0 {
 		query.Indices = []string{index}
 	}
-	result := opensearchapi.CatRecoveryResp{}
-	if rsp, err := api.Client.Do(ctx, nil, &result); err != nil {
+	var result []opensearchapi.CatRecoveryItemResp
+	if rsp, err := api.Client.Do(ctx, query, &result); err != nil {
 		log.Fatal(err)
 	} else {
 		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
-			log.Printf("recovery status:%v", printutils.MarshalJSONOrDie(result))
+			log.Printf("recovery status:\n%s", printutils.MarshalJSONOrDie(result))
 		}
 	}
 }
