@@ -23,6 +23,10 @@ type OpensearchWrapper struct {
 	Config appconfig.AppConfig
 }
 
+func (a *OpensearchWrapper) requestContext() (context.Context, context.CancelFunc) {
+	return context.WithTimeout(context.TODO(), a.Config.ServerCallTimeout())
+}
+
 func NewFromCmd(cmd *cobra.Command) *OpensearchWrapper {
 	return New(
 		configutils.LoadConfig(flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
@@ -39,7 +43,7 @@ func New(c appconfig.AppConfig, ctx context.Context) *OpensearchWrapper {
 
 // Generic methods for wrapper | not specific to plugin
 func (a *OpensearchWrapper) ClusterSettings() {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := a.requestContext()
 	defer cancelFunc()
 	var rspData interface{}
 	_, err := a.Client.Do(ctx, opensearchapi.ClusterGetSettingsReq{
@@ -52,7 +56,7 @@ func (a *OpensearchWrapper) ClusterSettings() {
 }
 
 func (a *OpensearchWrapper) PluginsList() []opensearchapi.CatPluginResp {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := a.requestContext()
 	defer cancelFunc()
 	var rspData []opensearchapi.CatPluginResp
 	_, err := a.Client.Do(ctx, opensearchapi.CatPluginsReq{Params: opensearchapi.CatPluginsParams{}}, &rspData)

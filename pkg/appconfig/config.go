@@ -1,14 +1,17 @@
 package appconfig
 
 import (
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/fp"
 	"fmt"
 	"slices"
 	"strings"
+	"time"
 )
 
 // this is package is managing context for the application
 
 const ApiVersionV1 = "v1"
+const DefaultServerTimeoutSeconds = 60
 
 // AppConfig represents the configuration for managing multiple clusters, users, and contexts settings.
 // Clusters defines a slice of cluster configurations, including name and parameters.
@@ -16,7 +19,8 @@ const ApiVersionV1 = "v1"
 // Contexts defines a slice of context configurations mapping clusters, users, and contexts.
 // Current specifies the currently active context name.
 type AppConfig struct {
-	ApiVersion string `yaml:"apiVersion"`
+	CliParams  *CliParams `yaml:"params,omitempty"`
+	ApiVersion string     `yaml:"apiVersion"`
 	// Clusters holds the configuration for multiple cluster settings, including name and related parameters.
 	Clusters []ClusterConfig `yaml:"clusters"`
 	// Users holds the configuration for multiple user settings, including name and password.
@@ -25,6 +29,17 @@ type AppConfig struct {
 	Contexts []ContextConfig `yaml:"contexts"`
 	// Current holds the current context name.
 	Current string `yaml:"current"`
+}
+
+type CliParams struct {
+	ServerTimeoutSeconds *int `yaml:"serverTimeoutSeconds"`
+}
+
+func (p *CliParams) GetServerTimeoutSeconds() int {
+	if p.ServerTimeoutSeconds == nil {
+		return DefaultServerTimeoutSeconds
+	}
+	return *p.ServerTimeoutSeconds
 }
 
 func (c *AppConfig) ShowContextInfo(name string) string {
@@ -162,6 +177,7 @@ func (c *AppConfig) GetContextList() []string {
 func Example() AppConfig {
 	return AppConfig{
 		ApiVersion: ApiVersionV1,
+		CliParams:  &CliParams{ServerTimeoutSeconds: fp.AsPointer(DefaultServerTimeoutSeconds)},
 		Clusters: []ClusterConfig{
 			{
 				Name: "example-cluster",
@@ -188,4 +204,16 @@ func Example() AppConfig {
 		},
 		Current: "example-context",
 	}
+}
+
+func (c *AppConfig) ServerCallTimeout() time.Duration {
+	v := DefaultServerTimeoutSeconds
+	if c.CliParams != nil && c.CliParams.ServerTimeoutSeconds != nil {
+		if *c.CliParams.ServerTimeoutSeconds <= 0 {
+			v = DefaultServerTimeoutSeconds
+		} else {
+			v = *c.CliParams.ServerTimeoutSeconds
+		}
+	}
+	return time.Duration(v) * time.Second
 }

@@ -4,7 +4,6 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api/types/replication"
 	tstats "bitbucket.org/ooyalaflex/opensearch-cli/pkg/api/types/stats"
 	printutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/print"
-	"context"
 	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
 	"log"
 )
@@ -12,7 +11,7 @@ import (
 // CreateReplication creates the replication task
 // Initiate replication of an index from the leader cluster to the follower cluster. Send this request to the follower cluster.
 func (api *OpensearchWrapper) CreateReplication(opts replication.StartReplicationReq, raw bool) {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var result interface{}
 	if rsp, err := api.Client.Do(ctx, opts, &result); err != nil {
@@ -27,7 +26,7 @@ func (api *OpensearchWrapper) CreateReplication(opts replication.StartReplicatio
 }
 
 func (api *OpensearchWrapper) PauseReplication(indexName string, raw bool) {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var result interface{}
 	if rsp, err := api.Client.Do(ctx, replication.PauseReplicationReq{Index: indexName}, &result); err != nil {
@@ -41,7 +40,7 @@ func (api *OpensearchWrapper) PauseReplication(indexName string, raw bool) {
 	}
 }
 func (api *OpensearchWrapper) ResumeReplication(indexName string, raw bool) {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var result interface{}
 	if rsp, err := api.Client.Do(ctx, replication.ResumeReplicationReq{Index: indexName}, &result); err != nil {
@@ -55,7 +54,7 @@ func (api *OpensearchWrapper) ResumeReplication(indexName string, raw bool) {
 	}
 }
 func (api *OpensearchWrapper) StopReplication(indexName string, raw bool) {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var result interface{}
 	if rsp, err := api.Client.Do(ctx, replication.StopReplicationReq{Index: indexName}, &result); err != nil {
@@ -69,7 +68,7 @@ func (api *OpensearchWrapper) StopReplication(indexName string, raw bool) {
 	}
 }
 func (api *OpensearchWrapper) StatusReplication(indexName string, raw bool) {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var result tstats.IndexReplicationStatsResponse
 	params := tstats.IndexReplicationStatsReq{Index: indexName, Params: tstats.IndexReplicationStatsParams{Verbose: true}}
@@ -84,7 +83,7 @@ func (api *OpensearchWrapper) StatusReplication(indexName string, raw bool) {
 	}
 }
 func (api *OpensearchWrapper) TaskStatusReplication(index string, detailed, table, raw bool) {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	query := opensearchapi.CatRecoveryReq{Params: opensearchapi.CatRecoveryParams{
 		ActiveOnly: opensearchapi.ToPointer(true),

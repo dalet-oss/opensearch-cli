@@ -3,7 +3,6 @@ package api
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/fp"
 	printutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/print"
-	"context"
 	"encoding/json"
 	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
 	"log"
@@ -42,7 +41,7 @@ func (opts CCRCreateOpts) BuildCCRParams() []byte {
 }
 
 func (api *OpensearchWrapper) ConfigureRemoteCluster(opts CCRCreateOpts, raw bool) {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var result opensearchapi.ClusterPutSettingsResp
 	params := opensearchapi.ClusterPutSettingsReq{
@@ -61,7 +60,7 @@ func (api *OpensearchWrapper) ConfigureRemoteCluster(opts CCRCreateOpts, raw boo
 }
 
 func (api *OpensearchWrapper) GetRemoteSettings(raw bool) {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var result opensearchapi.ClusterGetSettingsResp
 	params := opensearchapi.ClusterGetSettingsReq{Params: opensearchapi.ClusterGetSettingsParams{Pretty: false}}
@@ -85,7 +84,7 @@ func (api *OpensearchWrapper) DeleteRemote(remoteName string, raw bool) {
 		log.Fatalf("No settings found for remote with name %s in the cluster", remoteName)
 	}
 
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var result opensearchapi.ClusterPutSettingsResp
 	params := opensearchapi.ClusterPutSettingsReq{

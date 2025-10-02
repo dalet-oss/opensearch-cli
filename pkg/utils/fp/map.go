@@ -20,3 +20,11 @@ func GetOrDefault[T any](t T, defaultValue T, condition func(T) bool) T {
 func NotEmptyString(s string) bool {
 	return strings.TrimSpace(s) != ""
 }
+
+func AsPointer[T any](t T) *T {
+	return &t
+}
+
+func FromPointer[T any](t *T) T {
+	return *t
+}

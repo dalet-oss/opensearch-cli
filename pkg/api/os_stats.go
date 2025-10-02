@@ -3,7 +3,6 @@ package api
 import (
 	tstats "bitbucket.org/ooyalaflex/opensearch-cli/pkg/api/types/stats"
 	printutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/print"
-	"context"
 	"log"
 	"strings"
 )
@@ -12,7 +11,7 @@ import (
 // function wraps the following opensearch-go API call:
 // https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#get-replication-status
 func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var result tstats.IndexReplicationStatsResponse
 	rsp, err := api.Client.Do(ctx, tstats.IndexReplicationStatsReq{Index: indexName, Params: tstats.IndexReplicationStatsParams{Verbose: true}}, &result)
@@ -51,7 +50,7 @@ func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) {
 // function wraps the following opensearch-go API call:
 // https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#get-leader-cluster-stats
 func (api *OpensearchWrapper) GetReplicationLeaderStats(raw bool) {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 
 	var result tstats.ReplicationLeaderStatsResponse
@@ -66,7 +65,7 @@ func (api *OpensearchWrapper) GetReplicationLeaderStats(raw bool) {
 // function wraps the following opensearch-go API call:
 // https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#get-follower-cluster-stats
 func (api *OpensearchWrapper) GetReplicationFollowerStats(raw bool) {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 
 	var result tstats.ReplicationFollowerStatsResponse
@@ -81,7 +80,7 @@ func (api *OpensearchWrapper) GetReplicationFollowerStats(raw bool) {
 // function wraps the following opensearch-go API call:
 // https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#get-auto-follow-stats
 func (api *OpensearchWrapper) GetReplicationAutofollowStats(raw bool) {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 
 	var result tstats.ReplicationAutoFollowStatsResponse

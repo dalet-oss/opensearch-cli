@@ -1,7 +1,6 @@
 package api
 
 import (
-	"context"
 	"encoding/json"
 	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
 	"golang.org/x/exp/maps"
@@ -22,7 +21,7 @@ func HasPlugin(pluginsList []opensearchapi.CatPluginResp, name string) bool {
 }
 
 func (api *OpensearchWrapper) getClusterSettings() opensearchapi.ClusterGetSettingsResp {
-	ctx, cancelFunc := context.WithTimeout(context.TODO(), LightOperationTimeout)
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var result opensearchapi.ClusterGetSettingsResp
 	_, err := api.Client.Do(ctx, opensearchapi.ClusterGetSettingsReq{Params: opensearchapi.ClusterGetSettingsParams{Pretty: false}}, &result)
