@@ -54,7 +54,7 @@ func deleteRemote(remoteName string, settings opensearchapi.ClusterGetSettingsRe
 		log.Fatal(parseErr)
 	}
 	transientRemote, foundInTransientSettings := findRemoteSettings(remoteName, transientSettings)
-	persistentRemote, foundInPersistentSettings := findRemoteSettings(remoteName, transientSettings)
+	persistentRemote, foundInPersistentSettings := findRemoteSettings(remoteName, persistentSettings)
 
 	if foundInTransientSettings || foundInPersistentSettings {
 		if foundInTransientSettings {

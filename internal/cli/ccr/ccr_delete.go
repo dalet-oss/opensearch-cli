@@ -13,7 +13,10 @@ var ccrDeleteCmd = &cobra.Command{
 	Short:   "delete remote configuration from the OpenSearch cluster",
 	Run: func(cmd *cobra.Command, args []string) {
 		api.NewFromCmd(cmd).
-			DeleteRemote(flagutils.GetNotEmptyStringFlag(cmd.Flags(), SettingsRemoteNameFlag), flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag))
+			DeleteRemote(
+				flagutils.GetNotEmptyStringFlag(cmd.Flags(), SettingsRemoteNameFlag),
+				flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag),
+			)
 	},
 }
 
