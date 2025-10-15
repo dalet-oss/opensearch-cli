@@ -70,7 +70,7 @@ func deleteRemote(remoteName string, settings opensearchapi.ClusterGetSettingsRe
 func jsonNullify(in map[string]interface{}) map[string]interface{} {
 	out := make(map[string]interface{})
 	for _, k := range maps.Keys(in) {
-		out[k] = []byte("null")
+		out[k] = nil
 	}
 	return out
 }

@@ -9,11 +9,11 @@ import (
 )
 
 func MarshalJSONOrDie[T any](marshallable T) []byte {
-	bytes, err := json.MarshalIndent(marshallable, "", "    ")
+	jsonBytes, err := json.MarshalIndent(marshallable, "", "    ")
 	if err != nil {
 		log.Fatal(err)
 	}
-	return bytes
+	return jsonBytes
 }
 
 func RawResponse(r *opensearch.Response) {
