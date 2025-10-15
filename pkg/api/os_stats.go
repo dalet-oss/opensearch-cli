@@ -90,3 +90,23 @@ func (api *OpensearchWrapper) GetReplicationAutofollowStats(raw bool) {
 	}
 	log.Printf("\n%s\n", printutils.MarshalJSONOrDie(result))
 }
+
+// ListOfAFRules - shows the list of configured autofollow rules
+func (api *OpensearchWrapper) ListOfAFRules(raw bool) {
+	ctx, cancelFunc := api.requestContext()
+	defer cancelFunc()
+
+	var result tstats.ReplicationAutoFollowStatsResponse
+	_, err := api.Client.Do(ctx, tstats.IndexReplicationAutoFollowStatsReq{}, &result)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if !raw {
+		log.Println("configured autofollow rules:")
+		for _, afr := range result.AutofollowStats {
+			log.Printf("name: '%s'\t| pattern: '%s'\t| failed indicies: %v\n", afr.Name, afr.Pattern, afr.FailedIndices)
+		}
+	} else {
+		log.Printf("configured autofollow rules:\n%s\n", printutils.MarshalJSONOrDie(result.AutofollowStats))
+	}
+}

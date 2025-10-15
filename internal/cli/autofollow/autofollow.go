@@ -14,6 +14,7 @@ func NewAutofollowCmd() *cobra.Command {
 	autofollowCmd.AddCommand(
 		autofollowCreateCmd,
 		autofollowDeleteCmd,
+		autofollowListCmd,
 	)
 	return autofollowCmd
 }
