@@ -5,7 +5,6 @@ import (
 	"errors"
 	vault "github.com/sosedoff/ansible-vault-go"
 	"gopkg.in/yaml.v3"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -41,7 +40,7 @@ func GetDataFromVaultFile(vaultFile, decryptPass, userKey, passKey string) (*typ
 	if strings.HasPrefix(vaultFile, "~") {
 		homeDir, err := os.UserHomeDir()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal().Err(err)
 		}
 		vaultFile = filepath.Join(homeDir, vaultFile[2:])
 	}
@@ -69,11 +68,11 @@ func GetDataFromVaultFile(vaultFile, decryptPass, userKey, passKey string) (*typ
 func CreateVault(vaultData map[string]string, vaultPass string) string {
 	vaultYamlBytes, marshallErr := yaml.Marshal(vaultData)
 	if marshallErr != nil {
-		log.Fatalf("fail to marshal content:%v", marshallErr)
+		log.Fatal().Msgf("fail to marshal content:%v", marshallErr)
 	}
 	vaultString, encryptErr := vault.Encrypt(string(vaultYamlBytes), vaultPass)
 	if encryptErr != nil {
-		log.Fatalf("unable to encrypt vault content:%v", encryptErr)
+		log.Fatal().Msgf("unable to encrypt vault content:%v", encryptErr)
 	}
 	return vaultString
 }

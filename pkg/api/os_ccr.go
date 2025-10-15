@@ -5,7 +5,6 @@ import (
 	printutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/print"
 	"encoding/json"
 	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
-	"log"
 	"strings"
 )
 
@@ -49,12 +48,12 @@ func (api *OpensearchWrapper) ConfigureRemoteCluster(opts CCRCreateOpts, raw boo
 		Params: opensearchapi.ClusterPutSettingsParams{Pretty: false},
 	}
 	if rsp, err := api.Client.Do(ctx, params, &result); err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	} else {
 		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
-			log.Printf("Cross-cluster replication creation result:\n%s\n", printutils.MarshalJSONOrDie(result))
+			log.Info().Msgf("Cross-cluster replication creation result:\n%s\n", printutils.MarshalJSONOrDie(result))
 		}
 	}
 }
@@ -65,14 +64,14 @@ func (api *OpensearchWrapper) GetRemoteSettings(raw bool) {
 	var result opensearchapi.ClusterGetSettingsResp
 	params := opensearchapi.ClusterGetSettingsReq{Params: opensearchapi.ClusterGetSettingsParams{Pretty: false}}
 	if rsp, err := api.Client.Do(ctx, params, &result); err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	} else {
 		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
 			var persistentSettings map[string]interface{}
 			_ = json.Unmarshal(result.Persistent, &persistentSettings)
-			log.Printf("Cluster remote settings:\n%s\n", printutils.MarshalJSONOrDie(persistentSettings["cluster"].(map[string]interface{})["remote"]))
+			log.Info().Msgf("Cluster remote settings:\n%s\n", printutils.MarshalJSONOrDie(persistentSettings["cluster"].(map[string]interface{})["remote"]))
 		}
 	}
 }
@@ -81,7 +80,7 @@ func (api *OpensearchWrapper) DeleteRemote(remoteName string, raw bool) {
 
 	remoteDeleteSettings := deleteRemote(remoteName, api.getClusterSettings())
 	if len(remoteDeleteSettings) == 0 {
-		log.Fatalf("No settings found for remote with name %s in the cluster", remoteName)
+		log.Fatal().Msgf("No settings found for remote with name %s in the cluster", remoteName)
 	}
 
 	ctx, cancelFunc := api.requestContext()
@@ -92,12 +91,12 @@ func (api *OpensearchWrapper) DeleteRemote(remoteName string, raw bool) {
 		Params: opensearchapi.ClusterPutSettingsParams{Pretty: false},
 	}
 	if rsp, err := api.Client.Do(ctx, params, &result); err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	} else {
 		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
-			log.Printf("Delete remote result:\n%s\n", printutils.MarshalJSONOrDie(result))
+			log.Info().Msgf("Delete remote result:\n%s\n", printutils.MarshalJSONOrDie(result))
 		}
 	}
 }

@@ -13,7 +13,6 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/ux/userconfig"
 	"fmt"
 	"github.com/spf13/cobra"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -66,7 +65,7 @@ func CreateClusterEntry(conf appconfig.AppConfig) appconfig.ClusterConfig {
 		clusterConfig.Name = clusterName
 	}
 	if clusterUrl := prompts.SimplePrompt("Cluster url"); len(clusterUrl) == 0 {
-		log.Fatal("Cluster url is required")
+		log.Fatal().Msg("Cluster url is required")
 	} else {
 		clusterConfig.Params = appconfig.ClusterParams{
 			Server: clusterUrl,

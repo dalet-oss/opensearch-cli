@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
 	"golang.org/x/exp/maps"
-	"log"
 	"slices"
 	"strings"
 )
@@ -26,7 +25,7 @@ func (api *OpensearchWrapper) getClusterSettings() opensearchapi.ClusterGetSetti
 	var result opensearchapi.ClusterGetSettingsResp
 	_, err := api.Client.Do(ctx, opensearchapi.ClusterGetSettingsReq{Params: opensearchapi.ClusterGetSettingsParams{Pretty: false}}, &result)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	}
 	return result
 }
@@ -47,11 +46,11 @@ func deleteRemote(remoteName string, settings opensearchapi.ClusterGetSettingsRe
 	var transientSettings map[string]interface{}
 	parseErr := json.Unmarshal(settings.Persistent, &persistentSettings)
 	if parseErr != nil {
-		log.Fatal(parseErr)
+		log.Fatal().Err(parseErr)
 	}
 	parseErr = json.Unmarshal(settings.Transient, &transientSettings)
 	if parseErr != nil {
-		log.Fatal(parseErr)
+		log.Fatal().Err(parseErr)
 	}
 	transientRemote, foundInTransientSettings := findRemoteSettings(remoteName, transientSettings)
 	persistentRemote, foundInPersistentSettings := findRemoteSettings(remoteName, persistentSettings)

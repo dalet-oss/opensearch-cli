@@ -1,11 +1,13 @@
 package generic
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
 )
+import "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/logging"
+
+var log = logging.Logger()
 
 func SaveFile(filename string, data string) error {
 	filePath := filename
@@ -32,7 +34,7 @@ func SaveFile(filename string, data string) error {
 func SaveFileOrDie(filename string, data string) {
 	err := SaveFile(filename, data)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	}
 
 }

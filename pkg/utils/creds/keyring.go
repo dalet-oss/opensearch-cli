@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/zalando/go-keyring"
-	"log"
 	"strings"
 )
 
@@ -17,7 +16,7 @@ func PushToKeyring(user, passw string) string {
 	id, creds := BuildKeyringPair(user, passw)
 	err := keyring.Set(consts.ServiceName, id, creds)
 	if err != nil {
-		log.Fatalf("unable to store data in the keyring:%v", err)
+		log.Fatal().Msgf("unable to store data in the keyring:%v", err)
 	}
 	return id
 }
@@ -26,7 +25,7 @@ func PushToKeyring(user, passw string) string {
 func DeleteFromKeyring(id string) {
 	err := keyring.Delete(consts.ServiceName, id)
 	if err != nil {
-		log.Fatalf("unable to delete data from the keyring:%v", err)
+		log.Fatal().Msgf("unable to delete data from the keyring:%v", err)
 	}
 }
 
@@ -35,7 +34,7 @@ func PullFromKeyring(id string) *types.Creds {
 	secretId := strings.Replace(id, fmt.Sprintf("%s%s", KeyringPrefix, KeyringSeparator), "", 1)
 	secret, err := keyring.Get(consts.ServiceName, secretId)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	}
 	return decodeCreds(secret)
 }
@@ -44,7 +43,7 @@ func PullFromKeyring(id string) *types.Creds {
 func BuildKeyringPair(username, password string) (id string, keyringEntry string) {
 	v7, err := uuid.NewV7()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	}
 	return fmt.Sprintf("%s%s%s", KeyringPrefix, KeyringSeparator, v7.String()), encodeCreds(username, password)
 }

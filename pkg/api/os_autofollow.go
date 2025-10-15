@@ -3,7 +3,6 @@ package api
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/api/types/replication"
 	printutils "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/print"
-	"log"
 )
 
 // CreateAutofollowRule - Automatically starts replication on indexes matching a specified pattern.
@@ -14,12 +13,12 @@ func (api *OpensearchWrapper) CreateAutofollowRule(opts replication.CreateAutofo
 
 	var result interface{}
 	if rsp, err := api.Client.Do(ctx, opts, &result); err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	} else {
 		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
-			log.Printf("autofollow rule creation result:\n%s\n", printutils.MarshalJSONOrDie(result))
+			log.Info().Msgf("autofollow rule creation result:\n%s\n", printutils.MarshalJSONOrDie(result))
 		}
 	}
 }
@@ -33,12 +32,12 @@ func (api *OpensearchWrapper) DeleteAutofollow(opts replication.DeleteAutofollow
 	var result interface{}
 
 	if rsp, err := api.Client.Do(ctx, opts, &result); err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	} else {
 		if raw || rsp.IsError() {
 			printutils.RawResponse(rsp)
 		} else {
-			log.Printf("autofollow rule deletion result:\n%s\n", printutils.MarshalJSONOrDie(result))
+			log.Info().Msgf("autofollow rule deletion result:\n%s\n", printutils.MarshalJSONOrDie(result))
 		}
 	}
 }

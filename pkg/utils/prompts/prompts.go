@@ -3,10 +3,12 @@ package prompts
 import (
 	"fmt"
 	"github.com/manifoldco/promptui"
-	"log"
 	"slices"
 	"strings"
 )
+import "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/logging"
+
+var log = logging.Logger()
 
 var (
 	OkChoice = []string{"y", "yes"}
@@ -44,7 +46,7 @@ func QuestionPrompt(label string) string {
 	}
 	run, err := prompt.Run()
 	if err != nil {
-		log.Fatalf("Prompt failed %v\n", err)
+		log.Fatal().Msgf("Prompt failed %v\n", err)
 	}
 	return run
 }
@@ -55,7 +57,7 @@ func SimplePrompt(label string) string {
 	}
 	run, err := prompt.Run()
 	if err != nil {
-		log.Fatalf("Prompt failed %v\n", err)
+		log.Fatal().Msgf("Prompt failed %v\n", err)
 	}
 	return run
 }
@@ -67,7 +69,7 @@ func ValidatedPrompt(label string, validate func(input string) error) string {
 	}
 	run, err := prompt.Run()
 	if err != nil {
-		log.Fatalf("Prompt failed %v\n", err)
+		log.Fatal().Msgf("Prompt failed %v\n", err)
 	}
 	return run
 }
@@ -79,7 +81,7 @@ func SecretPrompt(label string) string {
 	}
 	run, err := prompt.Run()
 	if err != nil {
-		log.Fatalf("Prompt failed %v\n", err)
+		log.Fatal().Msgf("Prompt failed %v\n", err)
 	}
 	return run
 }
@@ -91,7 +93,7 @@ func SelectivePrompt(label string, options []string) string {
 	}
 	_, result, err := prompt.Run()
 	if err != nil {
-		log.Fatalf("Prompt failed %v\n", err)
+		log.Fatal().Msgf("Prompt failed %v\n", err)
 	}
 	return result
 }

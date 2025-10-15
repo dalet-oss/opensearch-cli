@@ -2,7 +2,6 @@ package api
 
 import (
 	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
-	"log"
 )
 
 type IndexInfo struct {
@@ -30,7 +29,7 @@ func (api *OpensearchWrapper) GetIndexList() IndexInfoResponse {
 	request := opensearchapi.CatIndicesReq{Params: opensearchapi.CatIndicesParams{}}
 	responseData := IndexInfoResponse{}
 	if _, err := api.Client.Do(ctx, request, &responseData); err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	}
 	return responseData
 }
@@ -41,7 +40,7 @@ func (api *OpensearchWrapper) DeleteIndex(indexName string) {
 	var result interface{}
 	rsp, e := api.Client.Do(ctx, opensearchapi.IndicesDeleteReq{Indices: []string{indexName}}, &result)
 	if e != nil {
-		log.Fatal(e)
+		log.Fatal().Msgf("%v", e)
 	}
-	log.Println(rsp)
+	log.Info().Msgf("%v", rsp)
 }

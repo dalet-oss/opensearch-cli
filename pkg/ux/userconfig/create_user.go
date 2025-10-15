@@ -4,10 +4,12 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/appconfig"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/creds"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/generic"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/logging"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/prompts"
 	"fmt"
-	"log"
 )
+
+var log = logging.Logger()
 
 const (
 	VaultBackend   = "vault"
@@ -50,7 +52,7 @@ func getDataForKeyring() (string, string) {
 		}
 		return nil
 	}); len(userName) == 0 {
-		log.Fatal("Username is required")
+		log.Fatal().Msg("Username is required")
 	} else {
 		username = userName
 	}

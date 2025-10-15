@@ -1,10 +1,12 @@
 package consts
 
 import (
-	"log"
 	"os"
 	"path"
 )
+import "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/logging"
+
+var log = logging.Logger()
 
 const (
 	//ServiceName This is the service name in the keyring object
@@ -29,12 +31,12 @@ const (
 func bootstrapAndGet() string {
 	dir, homeDirErr := os.UserHomeDir()
 	if homeDirErr != nil {
-		log.Fatalf("❌Unable to get user home dir:%v", homeDirErr)
+		log.Fatal().Msgf("❌Unable to get user home dir:%v", homeDirErr)
 	}
 	configPathDir := path.Join(dir, DataDir, Tooldir)
 	err := os.MkdirAll(configPathDir, 0755)
 	if err != nil {
-		log.Fatalf("❌Unable to create config dir:%v", err)
+		log.Fatal().Msgf("❌Unable to create config dir:%v", err)
 	}
 	return configPathDir
 }

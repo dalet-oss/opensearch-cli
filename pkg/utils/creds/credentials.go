@@ -3,7 +3,6 @@ package creds
 import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/types"
-	"log"
 	"strings"
 )
 import "encoding/base64"
@@ -31,7 +30,7 @@ func decodeCreds(creds string) *types.Creds {
 func decodeb64(s string) string {
 	data, err := base64.StdEncoding.DecodeString(s)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	}
 	return string(data)
 }

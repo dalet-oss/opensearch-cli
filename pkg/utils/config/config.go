@@ -4,38 +4,40 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/appconfig"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/consts"
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/flagutils"
+	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/logging"
 	"context"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
-	"log"
 	"os"
 )
+
+var log = logging.Logger()
 
 const ConfigFilePerm = 0644
 
 func configBytes(config appconfig.AppConfig) []byte {
 	marshal, err := yaml.Marshal(config)
 	if err != nil {
-		log.Fatalf("unable to marshal config:%v", err)
+		log.Fatal().Msgf("unable to marshal config:%v", err)
 	}
 	return marshal
 }
 func writeFile(path string, data []byte) {
 	writeErr := os.WriteFile(path, data, ConfigFilePerm)
 	if writeErr != nil {
-		log.Fatalf("unable to write config file:%v", writeErr)
+		log.Fatal().Msgf("unable to write config file:%v", writeErr)
 	}
 }
 func writeFileResult(path string, data []byte) bool {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		_, err := os.Create(path)
 		if err != nil {
-			log.Fatalf("unable to create config file:%v", err)
+			log.Fatal().Msgf("unable to create config file:%v", err)
 		}
 	}
 	writeErr := os.WriteFile(path, data, ConfigFilePerm)
 	if writeErr != nil {
-		log.Printf("unable to write config file:%v", writeErr)
+		log.Info().Msgf("unable to write config file:%v", writeErr)
 		return false
 	}
 	return true
@@ -48,7 +50,7 @@ func Init(example bool) {
 	if _, err := os.Stat(defaultConfig); os.IsNotExist(err) {
 		_, err := os.Create(defaultConfig)
 		if err != nil {
-			log.Fatalf("unable to create config file:%v", err)
+			log.Fatal().Msgf("unable to create config file:%v", err)
 		}
 		if example {
 			writeFile(defaultConfig, configBytes(appconfig.Example()))
@@ -67,15 +69,15 @@ func LoadConfig(path string) appconfig.AppConfig {
 	if _, err := os.Stat(configPath); os.IsNotExist(err) && configPath == consts.DefaultConfig() {
 		Init(false)
 	} else if os.IsNotExist(err) {
-		log.Fatalf("config file not found:%v", err)
+		log.Fatal().Msgf("config file not found:%v", err)
 	}
 	if fileContent, err := os.ReadFile(configPath); err != nil {
-		log.Fatalf("unable to read config file:%v", err)
+		log.Fatal().Msgf("unable to read config file:%v", err)
 	} else {
 		var config appconfig.AppConfig
 		marshalErr := yaml.Unmarshal(fileContent, &config)
 		if marshalErr != nil {
-			log.Fatalf("unable to unmarshal config file:%v", marshalErr)
+			log.Fatal().Msgf("unable to unmarshal config file:%v", marshalErr)
 		}
 		return config
 	}

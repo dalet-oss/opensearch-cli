@@ -7,7 +7,6 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/prompts"
 	"fmt"
 	"github.com/spf13/cobra"
-	"log"
 	"slices"
 	"sort"
 )
@@ -35,7 +34,7 @@ var indexDeleteCmd = &cobra.Command{
 			if idx := slices.IndexFunc(registeredIndices, func(info api.IndexInfo) bool {
 				return info.Index == indexToDelete
 			}); idx == -1 {
-				log.Fatalf("❌index '%s' not found", indexToDelete)
+				log.Fatal().Msgf("❌index '%s' not found", indexToDelete)
 			}
 
 		}

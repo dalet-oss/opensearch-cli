@@ -10,9 +10,11 @@ import (
 	"github.com/opensearch-project/opensearch-go/v4"
 	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
 	"github.com/spf13/cobra"
-	"log"
 	"time"
 )
+import "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/logging"
+
+var log = logging.Logger()
 
 type ApiResponse map[string]interface{}
 
@@ -50,9 +52,9 @@ func (a *OpensearchWrapper) ClusterSettings() {
 		Params: opensearchapi.ClusterGetSettingsParams{IncludeDefaults: opensearch.ToPointer(false)},
 	}, &rspData)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	}
-	log.Printf("opensearch cluster settings:\n%s", printutils.MarshalJSONOrDie(rspData))
+	log.Info().Msgf("opensearch cluster settings:\n%s", printutils.MarshalJSONOrDie(rspData))
 }
 
 func (a *OpensearchWrapper) PluginsList() []opensearchapi.CatPluginResp {
@@ -61,8 +63,8 @@ func (a *OpensearchWrapper) PluginsList() []opensearchapi.CatPluginResp {
 	var rspData []opensearchapi.CatPluginResp
 	_, err := a.Client.Do(ctx, opensearchapi.CatPluginsReq{Params: opensearchapi.CatPluginsParams{}}, &rspData)
 	if err != nil {
-		log.Fatalf("fail to get plugin list:%v", err)
+		log.Fatal().Msgf("fail to get plugin list:%v", err)
 	}
-	//log.Printf("list of plugins:\n%s", printutils.MarshalJSONOrDie(rspData))
+	//log.Info().Msgf("list of plugins:\n%s", printutils.MarshalJSONOrDie(rspData))
 	return rspData
 }

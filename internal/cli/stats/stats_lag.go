@@ -7,7 +7,6 @@ import (
 	"bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/prompts"
 	"fmt"
 	"github.com/spf13/cobra"
-	"log"
 	"sort"
 )
 
@@ -20,7 +19,7 @@ var lagCmd = &cobra.Command{
 		replicationIndex := ""
 		client := api.NewFromCmd(cmd)
 		if len(args) == 0 || args[0] == "" {
-			log.Println("index name is required")
+			log.Info().Msg("index name is required")
 			registeredIndices := client.GetIndexList()
 			indexNames := fp.Map(registeredIndices, func(info api.IndexInfo) string {
 				return info.Index

@@ -6,6 +6,9 @@ package ctx
 import (
 	"github.com/spf13/cobra"
 )
+import "bitbucket.org/ooyalaflex/opensearch-cli/pkg/utils/logging"
+
+var log = logging.Logger()
 
 func NewCtxCmd() *cobra.Command {
 	// subcommands
