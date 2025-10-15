@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	OkChoice = []string{"ok", "y", "yes", "t", "true"}
-	NoChoice = []string{"n", "no", "f", "false"}
+	OkChoice = []string{"y", "yes"}
+	NoChoice = []string{"n", "no"}
 )
 
 func IsOk(input string) bool {
@@ -39,7 +39,7 @@ func QuestionValidateStd(input string) error {
 
 func QuestionPrompt(label string) string {
 	prompt := promptui.Prompt{
-		Label:    label,
+		Label:    fmt.Sprintf("%s[%s]", label, strings.Join(slices.Concat(OkChoice, NoChoice), "/")),
 		Validate: QuestionValidateStd,
 	}
 	run, err := prompt.Run()
