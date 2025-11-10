@@ -83,6 +83,15 @@ func getCCR() CCRCreateOpts {
 	}
 }
 
+func getNamedCCR(name string) CCRCreateOpts {
+	return CCRCreateOpts{
+		Type:       "",
+		Mode:       "",
+		RemoteName: name,
+		RemoteAddr: fmt.Sprintf("%s:%d", InternalIP(osCtrx[LeaderContainer]), transportPort),
+	}
+}
+
 func spinOpenSearch(netAliases []string, net *testcontainers.DockerNetwork, name string) *tcopensearch.OpenSearchContainer {
 	ctx := context.Background()
 	ctr, err := tcopensearch.Run(
