@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// TestOpensearchWrapper_GetReplicationAutofollowStats testing autofollow stats gathering from the OS instance
 func TestOpensearchWrapper_GetReplicationAutofollowStats(t *testing.T) {
 	replicatedIndex := "tc-replication-autofollow-stats-test"
 	ccrName := "autofollow-stats-test-remote"
@@ -126,8 +127,69 @@ func TestOpensearchWrapper_GetReplicationAutofollowStats(t *testing.T) {
 	}
 }
 
+// TestOpensearchWrapper_GetReplicationFollowerStats tests the retrieval of replication follower statistics in a multi-container setup.
 func TestOpensearchWrapper_GetReplicationFollowerStats(t *testing.T) {
-	tests := []OSMultiContainerTest{}
+	replicatedIndex := "tc-stats-follower-replicated-index"
+	ccrName := "tc-stats-repl-follower-ccr"
+	tests := []OSMultiContainerTest{
+		{
+			Name:          "positive|get follower stats for perfectly configured AF",
+			WantErr:       false,
+			Shotgun:       leaderShotgunInstance(replicatedIndex, 10*time.Millisecond),
+			DocumentCount: fp.AsPointer(100),
+			Wrapper:       wrapperForContainer(MainContainer),
+			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
+				assert.NotNil(t, c)
+				t.Log("[leader]creating index")
+				assert.NoError(t, c.CreateIndex(replicatedIndex))
+				t.Log("[leader]configured]")
+			},
+			ConfigureFollowerFunc: func(t *testing.T, c *OpensearchWrapper) {
+				assert.NotNil(t, c)
+				t.Log("[follower]configuring remote cluster")
+				assert.NoError(t, c.ConfigureRemoteCluster(getNamedCCR(ccrName), true), "expected to configure remote cluster")
+				t.Log("[follower]creating af rules")
+				afRule := replication.CreateAutofollowReq{
+					Header: nil,
+					Body: replication.CreateAutofollowBody{
+						Name:         replicatedIndex,
+						LeaderAlias:  ccrName,
+						IndexPattern: replicatedIndex,
+					},
+				}
+				assert.NoError(t, c.CreateAutofollowRule(afRule, true))
+				time.Sleep(1 * time.Second)
+				t.Log("[follower]configured]")
+			},
+			PostFollowerFunc: func(t *testing.T, c *OpensearchWrapper) {
+				t.Log("[follower]cleaning up")
+				assert.NotNil(t, c)
+				assert.NoError(t, c.DeleteAutofollow(replication.DeleteAutofollowReq{
+					Header: nil,
+					Body: replication.DeleteAutofollowBody{
+						Name:        replicatedIndex,
+						LeaderAlias: ccrName,
+					},
+				}, true))
+				t.Log("[follower]cleaning up remote cluster")
+				assert.NoError(t, c.DeleteRemote(ccrName, true))
+				t.Log("[follower]stop replication")
+				if err := c.StopReplication(replicatedIndex, true); err != nil {
+					t.Log(err)
+				}
+				t.Log("[follower]cleaning up indices")
+				assert.NoError(t, c.DeleteIndex(replicatedIndex))
+				t.Log("[follower]cleaned up")
+			},
+			PostLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
+				assert.NotNil(t, c)
+				t.Log("[leader]cleaning up indexes")
+				assert.NoError(t, c.DeleteIndex(replicatedIndex))
+				t.Log("[leader]cleaned up")
+			},
+			ExtraValidationFunc: nil,
+		},
+	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			// pre | post setup
@@ -150,6 +212,7 @@ func TestOpensearchWrapper_GetReplicationFollowerStats(t *testing.T) {
 				tt.Shotgun.Shoot(t, *tt.DocumentCount, nil)
 			}
 			t.Log("configured")
+			time.Sleep(2 * time.Second)
 			// actual test
 			followerStats, executionError := tt.Wrapper.GetReplicationFollowerStats(true)
 			if tt.WantErr {
@@ -164,8 +227,69 @@ func TestOpensearchWrapper_GetReplicationFollowerStats(t *testing.T) {
 	}
 }
 
+// TestOpensearchWrapper_GetReplicationLeaderStats tests the retrieval of replication leader statistics under various scenarios.
 func TestOpensearchWrapper_GetReplicationLeaderStats(t *testing.T) {
-	tests := []OSMultiContainerTest{}
+	replicatedIndex := "tc-stats-leader-replicated-index"
+	ccrName := "tc-stats-repl-leader-ccr"
+	tests := []OSMultiContainerTest{
+		{
+			Name:          "positive|get leader stats for perfectly configured AF",
+			WantErr:       false,
+			Shotgun:       leaderShotgunInstance(replicatedIndex, 10*time.Millisecond),
+			DocumentCount: fp.AsPointer(100),
+			Wrapper:       wrapperForContainer(LeaderContainer),
+			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
+				assert.NotNil(t, c)
+				t.Log("[leader]creating index")
+				assert.NoError(t, c.CreateIndex(replicatedIndex))
+				t.Log("[leader]configured]")
+			},
+			ConfigureFollowerFunc: func(t *testing.T, c *OpensearchWrapper) {
+				assert.NotNil(t, c)
+				t.Log("[follower]configuring remote cluster")
+				assert.NoError(t, c.ConfigureRemoteCluster(getNamedCCR(ccrName), true), "expected to configure remote cluster")
+				t.Log("[follower]creating af rules")
+				afRule := replication.CreateAutofollowReq{
+					Header: nil,
+					Body: replication.CreateAutofollowBody{
+						Name:         replicatedIndex,
+						LeaderAlias:  ccrName,
+						IndexPattern: replicatedIndex,
+					},
+				}
+				assert.NoError(t, c.CreateAutofollowRule(afRule, true))
+				time.Sleep(1 * time.Second)
+				t.Log("[follower]configured]")
+			},
+			PostFollowerFunc: func(t *testing.T, c *OpensearchWrapper) {
+				t.Log("[follower]cleaning up")
+				assert.NotNil(t, c)
+				assert.NoError(t, c.DeleteAutofollow(replication.DeleteAutofollowReq{
+					Header: nil,
+					Body: replication.DeleteAutofollowBody{
+						Name:        replicatedIndex,
+						LeaderAlias: ccrName,
+					},
+				}, true))
+				t.Log("[follower]cleaning up remote cluster")
+				assert.NoError(t, c.DeleteRemote(ccrName, true))
+				t.Log("[follower]stop replication")
+				if err := c.StopReplication(replicatedIndex, true); err != nil {
+					t.Log(err)
+				}
+				t.Log("[follower]cleaning up indices")
+				assert.NoError(t, c.DeleteIndex(replicatedIndex))
+				t.Log("[follower]cleaned up")
+			},
+			PostLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
+				assert.NotNil(t, c)
+				t.Log("[leader]cleaning up indexes")
+				assert.NoError(t, c.DeleteIndex(replicatedIndex))
+				t.Log("[leader]cleaned up")
+			},
+			ExtraValidationFunc: nil,
+		},
+	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			// pre | post setup
@@ -188,6 +312,7 @@ func TestOpensearchWrapper_GetReplicationLeaderStats(t *testing.T) {
 				tt.Shotgun.Shoot(t, *tt.DocumentCount, nil)
 			}
 			t.Log("configured")
+			time.Sleep(2 * time.Second)
 			// actual test
 			leaderStats, executionError := tt.Wrapper.GetReplicationLeaderStats(true)
 			if tt.WantErr {
@@ -202,8 +327,70 @@ func TestOpensearchWrapper_GetReplicationLeaderStats(t *testing.T) {
 	}
 }
 
+// TestOpensearchWrapper_GetStatsLag tests the GetStatsLag function for correct behavior in various multi-container scenarios.
 func TestOpensearchWrapper_GetStatsLag(t *testing.T) {
-	tests := []OSMultiContainerTest{}
+	replicatedIndex := "tc-stats-lag-replicated-index"
+	ccrName := "tc-stats-lag-ccr"
+	tests := []OSMultiContainerTest{
+		{
+			Name:          "positive|get leader stats for perfectly configured AF",
+			WantErr:       false,
+			CaseInput:     replicatedIndex,
+			Shotgun:       leaderShotgunInstance(replicatedIndex, 10*time.Millisecond),
+			DocumentCount: fp.AsPointer(100),
+			Wrapper:       wrapperForContainer(MainContainer),
+			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
+				assert.NotNil(t, c)
+				t.Log("[leader]creating index")
+				assert.NoError(t, c.CreateIndex(replicatedIndex))
+				t.Log("[leader]configured]")
+			},
+			ConfigureFollowerFunc: func(t *testing.T, c *OpensearchWrapper) {
+				assert.NotNil(t, c)
+				t.Log("[follower]configuring remote cluster")
+				assert.NoError(t, c.ConfigureRemoteCluster(getNamedCCR(ccrName), true), "expected to configure remote cluster")
+				t.Log("[follower]creating af rules")
+				afRule := replication.CreateAutofollowReq{
+					Header: nil,
+					Body: replication.CreateAutofollowBody{
+						Name:         replicatedIndex,
+						LeaderAlias:  ccrName,
+						IndexPattern: replicatedIndex,
+					},
+				}
+				assert.NoError(t, c.CreateAutofollowRule(afRule, true))
+				time.Sleep(1 * time.Second)
+				t.Log("[follower]configured]")
+			},
+			PostFollowerFunc: func(t *testing.T, c *OpensearchWrapper) {
+				t.Log("[follower]cleaning up")
+				assert.NotNil(t, c)
+				assert.NoError(t, c.DeleteAutofollow(replication.DeleteAutofollowReq{
+					Header: nil,
+					Body: replication.DeleteAutofollowBody{
+						Name:        replicatedIndex,
+						LeaderAlias: ccrName,
+					},
+				}, true))
+				t.Log("[follower]cleaning up remote cluster")
+				assert.NoError(t, c.DeleteRemote(ccrName, true))
+				t.Log("[follower]stop replication")
+				if err := c.StopReplication(replicatedIndex, true); err != nil {
+					t.Log(err)
+				}
+				t.Log("[follower]cleaning up indices")
+				assert.NoError(t, c.DeleteIndex(replicatedIndex))
+				t.Log("[follower]cleaned up")
+			},
+			PostLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
+				assert.NotNil(t, c)
+				t.Log("[leader]cleaning up indexes")
+				assert.NoError(t, c.DeleteIndex(replicatedIndex))
+				t.Log("[leader]cleaned up")
+			},
+			ExtraValidationFunc: nil,
+		},
+	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			// pre | post setup
@@ -226,8 +413,9 @@ func TestOpensearchWrapper_GetStatsLag(t *testing.T) {
 				tt.Shotgun.Shoot(t, *tt.DocumentCount, nil)
 			}
 			t.Log("configured")
+			time.Sleep(2 * time.Second)
 			// actual test
-			statsLag, executionError := tt.Wrapper.GetStatsLag(tt.CaseInput.(string), true)
+			statsLag, executionError := tt.Wrapper.GetStatsLag(tt.CaseInput.(string), false)
 			if tt.WantErr {
 				assert.Error(t, executionError, "expected to get error")
 			} else {
@@ -240,6 +428,9 @@ func TestOpensearchWrapper_GetStatsLag(t *testing.T) {
 	}
 }
 
+// TestOpensearchWrapper_ListOfAFRules is a test function to validate the behavior of ListOfAFRules in OpensearchWrapper.
+// It sets up and configures leader and follower containers to simulate auto-follow rule generation and replication.
+// It ensures the expected auto-follow rules are created and validates cleanup operations post-test execution.
 func TestOpensearchWrapper_ListOfAFRules(t *testing.T) {
 	afRuleName := "tc-stats-af-rule"
 	const afIndexPattern = "tc-stats-af-*"
