@@ -32,12 +32,12 @@ var lagCmd = &cobra.Command{
 			sort.Strings(indexNames)
 			replicationIndex = prompts.SelectivePrompt("Select index for query", indexNames)
 			fmt.Println("selected index: ", replicationIndex)
-			if err := client.GetStatsLag(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), RawFlag)); err != nil {
+			if _, err := client.GetStatsLag(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), RawFlag)); err != nil {
 				log.Fatal().Err(err)
 			}
 		} else if !gu.ContainsWildcard(args[0]) {
 			replicationIndex = args[0]
-			if err := client.GetStatsLag(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), RawFlag)); err != nil {
+			if _, err := client.GetStatsLag(replicationIndex, flagutils.GetBoolFlag(cmd.Flags(), RawFlag)); err != nil {
 				log.Fatal().Err(err)
 			}
 		} else {
@@ -56,7 +56,7 @@ var lagCmd = &cobra.Command{
 					"found %d %s for %s expression",
 					len(filtered), fp.Ternary("index", "indices", len(filtered) == 1), args[0])
 				for _, index := range filtered {
-					if err := client.GetStatsLag(index, flagutils.GetBoolFlag(cmd.Flags(), RawFlag)); err != nil {
+					if _, err := client.GetStatsLag(index, flagutils.GetBoolFlag(cmd.Flags(), RawFlag)); err != nil {
 						log.Fatal().Err(err)
 					}
 				}

@@ -11,20 +11,20 @@ import (
 // GetStatsLag retrieves and displays replication lag statistics for a specified index.
 // function wraps the following opensearch-go API call:
 // https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#get-replication-status
-func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) error {
+func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) (tstats.IndexReplicationStatsResponse, error) {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var result tstats.IndexReplicationStatsResponse
 	rsp, err := api.Client.Do(ctx, tstats.IndexReplicationStatsReq{Index: indexName, Params: tstats.IndexReplicationStatsParams{Verbose: true}}, &result)
 	if err != nil {
-		return err
+		return result, err
 	}
 	if rsp.IsError() {
-		return errors.New(printutils.RawResponse(rsp))
+		return result, errors.New(printutils.RawResponse(rsp))
 	}
 	if raw {
 		log.Info().Msg(printutils.RawResponse(rsp))
-		return nil
+		return result, nil
 	} else {
 		log.Info().Msgf("replication status for index '%s':\n", indexName)
 		switch strings.ToUpper(result.Status) {
@@ -42,13 +42,10 @@ func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) error {
 			log.Info().Msg("replication is not in progress")
 			log.Info().Msgf("reason:%s", result.Reason)
 		case "FAILED":
-			return errors.New(fmt.Sprintf("replication failed for index '%s'\nreason:\n%s", indexName, result.Reason))
-		default:
-			return errors.New("replication status is unknown")
-
+			return result, errors.New(fmt.Sprintf("replication failed for index '%s'\nreason:\n%s", indexName, result.Reason))
 		}
 	}
-	return nil
+	return result, nil
 }
 
 // GetReplicationLeaderStats retrieves and displays replication leader statistics for all indices.
