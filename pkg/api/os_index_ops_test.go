@@ -7,7 +7,7 @@ import (
 
 func TestOpensearchWrapper_DeleteIndex(t *testing.T) {
 	indexToDelete := "tc-create-index-to-delete"
-	tests := []TestCase{
+	tests := []OSSingleContainerTest{
 		{
 			Name:          "delete index that doesn't exist",
 			Wrapper:       testWrapper(),
@@ -50,7 +50,7 @@ func TestOpensearchWrapper_DeleteIndex(t *testing.T) {
 	}
 }
 func TestOpensearchWrapper_CreateIndex(t *testing.T) {
-	tests := []TestCase{
+	tests := []OSSingleContainerTest{
 		{
 			Name:          "create index",
 			Wrapper:       testWrapper(),
@@ -107,7 +107,7 @@ func TestOpensearchWrapper_CreateIndex(t *testing.T) {
 	}
 }
 func TestOpensearchWrapper_GetIndexList(t *testing.T) {
-	tests := []TestCase{
+	tests := []OSSingleContainerTest{
 		{
 			Name:          "get index list",
 			Wrapper:       testWrapper(),

@@ -13,7 +13,7 @@ var autofollowListCmd = &cobra.Command{
 	Short:   "shows list of configured autofollow rules.",
 	Example: "opensearch-cli autofollow list",
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := api.NewFromCmd(cmd).
+		if _, err := api.NewFromCmd(cmd).
 			ListOfAFRules(flagutils.GetBoolFlag(cmd.Flags(), consts.RawFlag)); err != nil {
 			log.Fatal().Msgf("failed to get the list autofollow rules:%v", err)
 		}

@@ -177,7 +177,8 @@ func InternalNetAddr(ctr *tcopensearch.OpenSearchContainer) string {
 	return fmt.Sprintf("%s:%d", addr, defaultHTTPPort)
 }
 
-type TestCase struct {
+// OSSingleContainerTest - wraps scenarios for tests that should be executed withing the single container
+type OSSingleContainerTest struct {
 	Name          string
 	Wrapper       *OpensearchWrapper
 	ConfigureFunc func(t *testing.T, c *OpensearchWrapper)
@@ -185,18 +186,31 @@ type TestCase struct {
 	CaseInput     interface{}
 	WantErr       bool
 }
-type ReplicationTesting struct {
-	Name                  string
-	Wrapper               *OpensearchWrapper
-	Shotgun               *shotgun
-	DocumentCount         *int
-	ConfigureLeaderFunc   func(t *testing.T, c *OpensearchWrapper)
+
+// OSMultiContainerTest - wraps scenarios for tests that should be executed withing the multi containers setups and checks
+type OSMultiContainerTest struct {
+	// Name of the test case
+	Name string
+	// WantErr - if true, the default validation is expected to fail
+	WantErr bool
+	// Wrapper for the opensearch-cli (usually configed against the follower cluster)
+	Wrapper *OpensearchWrapper
+	// Shotgun - OS data loader instance
+	Shotgun *shotgun
+	// DocumentCount - the number of documents to be uploaded to the index with the Shotgun
+	DocumentCount *int
+	// ConfigureLeaderFunc - a function which configures the leader cluster [executes with every case]
+	ConfigureLeaderFunc func(t *testing.T, c *OpensearchWrapper)
+	// ConfigureFollowerFunc - a function which configures the follower cluster
 	ConfigureFollowerFunc func(t *testing.T, c *OpensearchWrapper)
-	PostLeaderFunc        func(t *testing.T, c *OpensearchWrapper)
-	PostFollowerFunc      func(t *testing.T, c *OpensearchWrapper)
-	CaseInput             interface{}
-	ExtraValidationFunc   func(t *testing.T, execResult any)
-	WantErr               bool
+	// PostLeaderFunc - a function is used to clean up the leader cluster after the test case
+	PostLeaderFunc func(t *testing.T, c *OpensearchWrapper)
+	// PostFollowerFunc - a function is used to clean up the follower cluster after the test case
+	PostFollowerFunc func(t *testing.T, c *OpensearchWrapper)
+	// CaseInput - input for the test case
+	CaseInput interface{}
+	// ExtraValidationFunc - a function which is used to validate the result of the test case in addition to the default validation
+	ExtraValidationFunc func(t *testing.T, execResult any)
 }
 
 // OSDocGenerator type alias around a function which generates a document(JSON string)

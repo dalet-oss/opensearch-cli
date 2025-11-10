@@ -28,7 +28,7 @@ func TestOpensearchWrapper_CreateAutofollowRule(t *testing.T) {
 			t.Skip("CCR plugin is not installed | .......... SKIPPED ..........")
 		}
 	}
-	tests := []TestCase{
+	tests := []OSSingleContainerTest{
 		{
 			Name:          "create autofollow on the fresh server(no ccr configured)",
 			Wrapper:       testWrapper(),
@@ -102,7 +102,7 @@ func TestOpensearchWrapper_DeleteAutofollow(t *testing.T) {
 			},
 		},
 	}
-	tests := []TestCase{
+	tests := []OSSingleContainerTest{
 		{
 			Name:    "delete autofollow rule that doesn't exist",
 			Wrapper: testWrapper(),

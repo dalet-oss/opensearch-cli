@@ -11,7 +11,7 @@ var leaderRStatsCmd = &cobra.Command{
 	Short:   "show leader replication stats.",
 	Example: `opensearch-cli stats leader`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := api.NewFromCmd(cmd).GetReplicationLeaderStats(flagutils.GetBoolFlag(cmd.Flags(), RawFlag)); err != nil {
+		if _, err := api.NewFromCmd(cmd).GetReplicationLeaderStats(flagutils.GetBoolFlag(cmd.Flags(), RawFlag)); err != nil {
 			log.Fatal().Msgf("failed to get leader stats:%v", err)
 		}
 	},

@@ -11,7 +11,7 @@ var autofollowRstatsCmd = &cobra.Command{
 	Short:   "show autofollow information.",
 	Example: `opensearch-cli stats autofollow`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := api.NewFromCmd(cmd).GetReplicationAutofollowStats(flagutils.GetBoolFlag(cmd.Flags(), RawFlag)); err != nil {
+		if _, err := api.NewFromCmd(cmd).GetReplicationAutofollowStats(flagutils.GetBoolFlag(cmd.Flags(), RawFlag)); err != nil {
 			log.Fatal().Msgf("failed to get autofollow stats:%v", err)
 		}
 	},

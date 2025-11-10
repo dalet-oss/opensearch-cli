@@ -86,7 +86,7 @@ func TestCCRCreateOpts_BuildCCRParams(t *testing.T) {
 
 // TestOpensearchWrapper_CreateRemoteCluster tests the CreateRemoteCluster method of the OpensearchWrapper struct
 func TestOpensearchWrapper_ConfigureRemoteCluster(t *testing.T) {
-	tests := []TestCase{
+	tests := []OSSingleContainerTest{
 		{
 			Name:    "Trying to configure a remote cluster with a non-existent type",
 			Wrapper: testWrapper(),
@@ -155,7 +155,7 @@ func TestOpensearchWrapper_ConfigureRemoteCluster(t *testing.T) {
 
 func TestOpensearchWrapper_DeleteRemote(t *testing.T) {
 	const testRemoteName = "test-delete-remote"
-	tests := []TestCase{
+	tests := []OSSingleContainerTest{
 		{
 			Name:          "delete remote cluster that doesn't exist",
 			Wrapper:       testWrapper(),
@@ -212,7 +212,7 @@ func TestOpensearchWrapper_GetRemoteSettings(t *testing.T) {
 		RemoteName: "normal-remote",
 		RemoteAddr: "fake.local:9300",
 	}
-	tests := []TestCase{
+	tests := []OSSingleContainerTest{
 		{
 			Name:          "get remote settings that doesn't exist",
 			Wrapper:       testWrapper(),

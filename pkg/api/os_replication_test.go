@@ -59,7 +59,7 @@ func leaderShotgunInstance(index string, delay time.Duration) *shotgun {
 //   - confirm replication status
 func TestOpensearchWrapper_CreateReplication(t *testing.T) {
 	replicatedIndexName := "shotgun-create-replication-task-test-index"
-	tests := []ReplicationTesting{
+	tests := []OSMultiContainerTest{
 		{
 			Name:          "positive|create replication task",
 			WantErr:       false,
@@ -170,7 +170,7 @@ func TestOpensearchWrapper_CreateReplication(t *testing.T) {
 //   - confirm paused state
 func TestOpensearchWrapper_PauseReplication(t *testing.T) {
 	replicatedIndexName := "shotgun-pause-replication-task-test-index"
-	tests := []ReplicationTesting{
+	tests := []OSMultiContainerTest{
 		{
 			Name:          "positive|pausing replication",
 			WantErr:       false,
@@ -290,7 +290,7 @@ func TestOpensearchWrapper_PauseReplication(t *testing.T) {
 //   - confirm resumes state of the replication
 func TestOpensearchWrapper_ResumeReplication(t *testing.T) {
 	replicatedIndexName := "shotgun-resume-replication-task-test-index"
-	tests := []ReplicationTesting{
+	tests := []OSMultiContainerTest{
 		{
 			Name:          "positive|resume replication",
 			WantErr:       false,
@@ -422,7 +422,7 @@ func TestOpensearchWrapper_ResumeReplication(t *testing.T) {
 //   - confirm the expected status of the task
 func TestOpensearchWrapper_StatusReplication(t *testing.T) {
 	replicatedIndexName := "shotgun-status-replication-task-test-index"
-	tests := []ReplicationTesting{
+	tests := []OSMultiContainerTest{
 		{
 			Name:          "positive|query existing replication",
 			WantErr:       false,
@@ -533,7 +533,7 @@ func TestOpensearchWrapper_StatusReplication(t *testing.T) {
 //   - stop the replication task
 func TestOpensearchWrapper_StopReplication(t *testing.T) {
 	replicatedIndexName := "shotgun-stop-replication-task-test-index"
-	tests := []ReplicationTesting{
+	tests := []OSMultiContainerTest{
 		{
 			Name:          "positive|stop active replication",
 			WantErr:       false,
@@ -656,7 +656,7 @@ func TestOpensearchWrapper_StopReplication(t *testing.T) {
 // Multiple test cases are run with pre/post setup steps, and assertions are made on the expected errors or results.
 func TestOpensearchWrapper_TaskStatusReplication(t *testing.T) {
 	replicatedIndexName := "shotgun-task-status-replication-task-test-index"
-	tests := []ReplicationTesting{
+	tests := []OSMultiContainerTest{
 		{
 			Name:          "positive|query existing replication",
 			WantErr:       false,

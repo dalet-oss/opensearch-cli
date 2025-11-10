@@ -76,7 +76,7 @@ func TestNew(t *testing.T) {
 }
 
 func TestOpensearchWrapper_ClusterSettings(t *testing.T) {
-	tests := []TestCase{
+	tests := []OSSingleContainerTest{
 		{
 			Name:    "get settings of the normal cluster",
 			Wrapper: testWrapper(),
@@ -95,7 +95,7 @@ func TestOpensearchWrapper_ClusterSettings(t *testing.T) {
 }
 
 func TestOpensearchWrapper_PluginsList(t *testing.T) {
-	tests := []TestCase{
+	tests := []OSSingleContainerTest{
 		{
 			Name:    "get list of plugins",
 			Wrapper: testWrapper(),

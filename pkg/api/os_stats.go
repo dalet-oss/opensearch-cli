@@ -51,96 +51,96 @@ func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) (tstats.In
 // GetReplicationLeaderStats retrieves and displays replication leader statistics for all indices.
 // function wraps the following opensearch-go API call:
 // https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#get-leader-cluster-stats
-func (api *OpensearchWrapper) GetReplicationLeaderStats(raw bool) error {
+func (api *OpensearchWrapper) GetReplicationLeaderStats(raw bool) (tstats.ReplicationLeaderStatsResponse, error) {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 
 	var result tstats.ReplicationLeaderStatsResponse
 	rsp, err := api.Client.Do(ctx, tstats.IndexReplicationLeaderStatsReq{}, &result)
 	if err != nil {
-		return err
+		return result, err
 	}
 	if rsp.IsError() {
-		return errors.New(printutils.RawResponse(rsp))
+		return result, errors.New(printutils.RawResponse(rsp))
 	}
 	if raw {
 		log.Info().Msg(printutils.RawResponse(rsp))
-		return nil
+		return result, nil
 	} else {
 		log.Info().Msgf("\n%s\n", printutils.MarshalJSONOrDie(result))
 	}
-	return nil
+	return result, nil
 }
 
 // GetReplicationFollowerStats retrieves and displays replication follower statistics for all indices.
 // function wraps the following opensearch-go API call:
 // https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#get-follower-cluster-stats
-func (api *OpensearchWrapper) GetReplicationFollowerStats(raw bool) error {
+func (api *OpensearchWrapper) GetReplicationFollowerStats(raw bool) (tstats.ReplicationFollowerStatsResponse, error) {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 
 	var result tstats.ReplicationFollowerStatsResponse
 	rsp, err := api.Client.Do(ctx, tstats.IndexReplicationFollowerStatsReq{}, &result)
 	if err != nil {
-		return err
+		return result, err
 	}
 	if rsp.IsError() {
-		return errors.New(printutils.RawResponse(rsp))
+		return result, errors.New(printutils.RawResponse(rsp))
 	}
 	if raw {
 		log.Info().Msg(printutils.RawResponse(rsp))
-		return nil
+		return result, nil
 	} else {
 		log.Info().Msgf("\n%s\n", printutils.MarshalJSONOrDie(result))
 	}
-	return nil
+	return result, nil
 }
 
 // GetReplicationAutofollowStats retrieves and displays replication autofollow statistics for all indices.
 // function wraps the following opensearch-go API call:
 // https://docs.opensearch.org/2.19/tuning-your-cluster/replication-plugin/api/#get-auto-follow-stats
-func (api *OpensearchWrapper) GetReplicationAutofollowStats(raw bool) error {
+func (api *OpensearchWrapper) GetReplicationAutofollowStats(raw bool) (tstats.ReplicationAutoFollowStatsResponse, error) {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 
 	var result tstats.ReplicationAutoFollowStatsResponse
 	rsp, err := api.Client.Do(ctx, tstats.IndexReplicationAutoFollowStatsReq{}, &result)
 	if err != nil {
-		return err
+		return result, err
 	}
 	if rsp.IsError() {
-		return errors.New(printutils.RawResponse(rsp))
+		return result, errors.New(printutils.RawResponse(rsp))
 	}
 	if raw {
 		log.Info().Msg(printutils.RawResponse(rsp))
-		return nil
+		return result, nil
 	} else {
 		log.Info().Msgf("\n%s\n", printutils.MarshalJSONOrDie(result))
 	}
-	return nil
+	return result, nil
 }
 
 // ListOfAFRules - shows the list of configured autofollow rules
-func (api *OpensearchWrapper) ListOfAFRules(raw bool) error {
+func (api *OpensearchWrapper) ListOfAFRules(raw bool) (tstats.ReplicationAutoFollowStatsResponse, error) {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 
 	var result tstats.ReplicationAutoFollowStatsResponse
 	rsp, err := api.Client.Do(ctx, tstats.IndexReplicationAutoFollowStatsReq{}, &result)
 	if err != nil {
-		return err
+		return result, err
 	}
 	if rsp.IsError() {
-		return errors.New(printutils.RawResponse(rsp))
+		return result, errors.New(printutils.RawResponse(rsp))
 	}
 	if raw {
 		log.Info().Msg(printutils.RawResponse(rsp))
-		return nil
+		return result, nil
 	} else {
 		log.Info().Msg("configured autofollow rules:")
 		for _, afr := range result.AutofollowStats {
 			log.Info().Msgf("name: '%s' | pattern: '%s' | failed indices: %v", afr.Name, afr.Pattern, afr.FailedIndices)
 		}
 	}
-	return nil
+	return result, nil
 }
