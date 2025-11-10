@@ -16,6 +16,7 @@ const (
 	KeyringBackend = "keyring"
 )
 
+// CreateUserEntry creates a new user configuration by prompting for input and selecting a credential backend.
 func CreateUserEntry(conf appconfig.AppConfig, cluster appconfig.ClusterConfig) appconfig.UserConfig {
 	user := appconfig.UserConfig{}
 	user.Name = prompts.ValidatedPrompt("User entry name", func(input string) error {
@@ -44,6 +45,7 @@ func CreateUserEntry(conf appconfig.AppConfig, cluster appconfig.ClusterConfig) 
 	return user
 }
 
+// getDataForKeyring prompts the user to input a username and password, returning them as two separate strings.
 func getDataForKeyring() (string, string) {
 	username := ""
 	if userName := prompts.ValidatedPrompt("Username", func(input string) error {
@@ -59,6 +61,7 @@ func getDataForKeyring() (string, string) {
 	return username, prompts.SecretPrompt("Password")
 }
 
+// getDataForVault prompts the user to select between creating a new vault or binding to an existing one and returns its config.
 func getDataForVault() *appconfig.VaultConfig {
 	const bindAction = "bind"
 	const createAction = "create"

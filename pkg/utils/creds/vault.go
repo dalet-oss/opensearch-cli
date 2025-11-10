@@ -10,6 +10,7 @@ import (
 	"strings"
 )
 
+// GetDataFromVaultString decrypts a Vault string and extracts the username and password based on specified keys.
 func GetDataFromVaultString(vaultString, decryptPass, userKey, passKey string) (*types.Creds, error) {
 	vaultYaml := make(map[string]interface{})
 	result := new(types.Creds)
@@ -34,6 +35,7 @@ func GetDataFromVaultString(vaultString, decryptPass, userKey, passKey string) (
 	return result, nil
 }
 
+// GetDataFromVaultFile decrypts a Vault file and extracts the username and password based on specified keys.
 func GetDataFromVaultFile(vaultFile, decryptPass, userKey, passKey string) (*types.Creds, error) {
 	vaultYaml := make(map[string]interface{})
 	result := new(types.Creds)
@@ -65,6 +67,7 @@ func GetDataFromVaultFile(vaultFile, decryptPass, userKey, passKey string) (*typ
 	return result, nil
 }
 
+// CreateVault encrypts a map of vaultData using the provided vaultPass and returns the encrypted vault string.
 func CreateVault(vaultData map[string]string, vaultPass string) string {
 	vaultYamlBytes, marshallErr := yaml.Marshal(vaultData)
 	if marshallErr != nil {

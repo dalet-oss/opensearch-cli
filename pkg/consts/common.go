@@ -10,11 +10,16 @@ var log = logging.Logger()
 
 const (
 	//ServiceName This is the service name in the keyring object
-	ServiceName   = "dalet-opensearch-cli"
+	ServiceName = "dalet-opensearch-cli"
+	//CredSeparator is the separator used to separate the username and password in the credentials.
 	CredSeparator = ":::"
-	DataDir       = ".dalet"
-	Tooldir       = "oscli"
-	ConfigFile    = "config"
+
+	// DataDir is the default directory name for storing application-specific data and configuration files.
+	DataDir = ".dalet"
+	// Tooldir is the default directory name for storing application-specific data and configuration files.
+	Tooldir = "oscli"
+	// ConfigFile is the default name of the config file.
+	ConfigFile = "config"
 
 	// ConfigFlag used to override path to the cli config
 	ConfigFlag = "config"
@@ -23,7 +28,8 @@ const (
 	// VersionFlag print version of the cli and exit
 	VersionFlag = "version"
 	// VaultPasswordFlag Supply a vault password file to decrypt the vaulted credentials.
-	VaultPasswordFlag         = "vault-password"
+	VaultPasswordFlag = "vault-password"
+	// DefaultRemoteClusterAlias is the default name alias used for identifying the remote OpenSearch cluster.
 	DefaultRemoteClusterAlias = "pyramid-replication"
 )
 

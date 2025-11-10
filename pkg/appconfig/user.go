@@ -46,6 +46,8 @@ type CredentialsExec struct {
 	Args []interface{} `json:"args"`
 }
 
+// GetUserCredentials retrieves and decrypts user credentials based on the configuration, such as token or vault settings.
+// It utilizes context to fetch additional required data, like the vault password, and handles errors accordingly.
 func (u *UserConfig) GetUserCredentials(ctx context.Context) (*types.Creds, error) {
 	if u.decryptedCreds != nil {
 		return u.decryptedCreds, nil

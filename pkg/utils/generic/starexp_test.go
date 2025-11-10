@@ -5,6 +5,7 @@ import (
 	"testing"
 )
 
+// TestWildcard validates matching functionality for strings against different patterns containing wildcards.
 func TestWildcard(t *testing.T) {
 	tests := []struct {
 		name          string

@@ -9,6 +9,7 @@ import "github.com/dalet-oss/opensearch-cli/pkg/utils/logging"
 
 var log = logging.Logger()
 
+// SaveFile saves the data to the specified file. If the file does not exist, it will be created.
 func SaveFile(filename string, data string) error {
 	filePath := filename
 	if strings.HasPrefix(filename, "~") {
@@ -31,6 +32,7 @@ func SaveFile(filename string, data string) error {
 	return os.WriteFile(filePath, []byte(data), 0644)
 }
 
+// SaveFileOrDie saves data to the specified file or logs a fatal error and exits if the operation fails.
 func SaveFileOrDie(filename string, data string) {
 	err := SaveFile(filename, data)
 	if err != nil {

@@ -15,10 +15,12 @@ var (
 	NoChoice = []string{"n", "no"}
 )
 
+// IsOk checks if the given input string matches any value in the predefined OkChoice slice (case-insensitive).
 func IsOk(input string) bool {
 	return slices.Contains(OkChoice, strings.ToLower(input))
 }
 
+// NotEmptyString validates that the provided string is not empty and returns an error if the string is empty.
 func NotEmptyString(s string) error {
 	if len(s) > 0 {
 		return nil
@@ -26,6 +28,7 @@ func NotEmptyString(s string) error {
 	return fmt.Errorf("empty string is not allowed")
 }
 
+// QuestionValidateStd validates the input string based on predefined "yes" and "no" choices and returns an error if invalid.
 func QuestionValidateStd(input string) error {
 	choices := slices.Concat(OkChoice, NoChoice)
 	if len(input) == 0 {
@@ -39,6 +42,7 @@ func QuestionValidateStd(input string) error {
 	}
 }
 
+// QuestionPrompt displays a prompt for a yes/no question using a predefined set of acceptable choices and returns the user input.
 func QuestionPrompt(label string) string {
 	prompt := promptui.Prompt{
 		Label:    fmt.Sprintf("%s[%s]", label, strings.Join(slices.Concat(OkChoice, NoChoice), "/")),
@@ -51,6 +55,7 @@ func QuestionPrompt(label string) string {
 	return run
 }
 
+// SimplePrompt displays a prompt with the given label and returns the user input as a string. Logs an error and exits on failure.
 func SimplePrompt(label string) string {
 	prompt := promptui.Prompt{
 		Label: label,
@@ -62,6 +67,7 @@ func SimplePrompt(label string) string {
 	return run
 }
 
+// ValidatedPrompt prompts the user with a label and validates the input using a provided validation function.
 func ValidatedPrompt(label string, validate func(input string) error) string {
 	prompt := promptui.Prompt{
 		Label:    label,
@@ -74,6 +80,7 @@ func ValidatedPrompt(label string, validate func(input string) error) string {
 	return run
 }
 
+// SecretPrompt displays a masked input prompt to securely receive user input and returns the entered string.
 func SecretPrompt(label string) string {
 	prompt := promptui.Prompt{
 		Label: label,
@@ -86,6 +93,7 @@ func SecretPrompt(label string) string {
 	return run
 }
 
+// SelectivePrompt displays a prompt with a list of options and returns the selected option.
 func SelectivePrompt(label string, options []string) string {
 	prompt := promptui.Select{
 		Label: label,

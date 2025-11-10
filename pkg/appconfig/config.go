@@ -31,6 +31,7 @@ type AppConfig struct {
 	Current string `yaml:"current"`
 }
 
+// IsEmpty checks if the AppConfig instance has no clusters, users, or contexts configured. Returns true if all are empty.
 func (c *AppConfig) IsEmpty() bool {
 	return len(c.Clusters) == 0 &&
 		len(c.Users) == 0 &&
@@ -41,6 +42,7 @@ type CliParams struct {
 	ServerTimeoutSeconds *int `yaml:"serverTimeoutSeconds"`
 }
 
+// GetServerTimeoutSeconds returns the server timeout in seconds, using a default value if none is configured.
 func (p *CliParams) GetServerTimeoutSeconds() int {
 	if p.ServerTimeoutSeconds == nil {
 		return DefaultServerTimeoutSeconds
@@ -48,6 +50,8 @@ func (p *CliParams) GetServerTimeoutSeconds() int {
 	return *p.ServerTimeoutSeconds
 }
 
+// ShowContextInfo returns a formatted string with context details, including cluster and user information.
+// If the context, cluster, or user does not exist, appropriate error indicators are included in the output.
 func (c *AppConfig) ShowContextInfo(name string) string {
 	info := []string{}
 	if ctx := c.GetContext(name); ctx != nil {
@@ -68,6 +72,9 @@ func (c *AppConfig) ShowContextInfo(name string) string {
 	return strings.Join(info, "\n")
 }
 
+// ShowContextInfoExtended returns a formatted string with context details, including cluster and user information.
+// If the context, cluster, or user does not exist, appropriate error indicators are included in the output.
+// This is the same as ShowContextInfo but with more details, including cluster and user parameters.
 func (c *AppConfig) ShowContextInfoExtended(name string) string {
 	info := []string{}
 	if ctx := c.GetContext(name); ctx != nil {
@@ -91,6 +98,7 @@ func (c *AppConfig) ShowContextInfoExtended(name string) string {
 	return strings.Join(info, "\n")
 }
 
+// GetCluster retrieves the cluster configuration by name from the Clusters slice. Returns nil if not found.
 func (c *AppConfig) GetCluster(name string) *ClusterConfig {
 	if idx := slices.IndexFunc(c.Clusters, func(p ClusterConfig) bool {
 		return p.Name == name
@@ -100,6 +108,8 @@ func (c *AppConfig) GetCluster(name string) *ClusterConfig {
 		return &c.Clusters[idx]
 	}
 }
+
+// GetContext retrieves a context configuration by name from the Contexts slice. Returns nil if the context is not found.
 func (c *AppConfig) GetContext(name string) *ContextConfig {
 	if idx := slices.IndexFunc(c.Contexts, func(p ContextConfig) bool {
 		return p.Name == name
@@ -109,6 +119,8 @@ func (c *AppConfig) GetContext(name string) *ContextConfig {
 		return &c.Contexts[idx]
 	}
 }
+
+// GetUser retrieves a user configuration by name from the Users slice. Returns nil if the user is not found.
 func (c *AppConfig) GetUser(name string) *UserConfig {
 	if idx := slices.IndexFunc(c.Users, func(p UserConfig) bool {
 		return p.Name == name
@@ -118,22 +130,29 @@ func (c *AppConfig) GetUser(name string) *UserConfig {
 		return &c.Users[idx]
 	}
 }
+
+// HasCluster checks if a cluster with the same name as the candidate exists in the Clusters slice. Returns true if found.
 func (c *AppConfig) HasCluster(candidate ClusterConfig) bool {
 	return slices.ContainsFunc(c.Clusters, func(p ClusterConfig) bool {
 		return p.Name == candidate.Name
 	})
 }
 
+// HasUser checks if a user with the same name as the candidate exists in the Users slice. Returns true if found.
 func (c *AppConfig) HasUser(candidate UserConfig) bool {
 	return slices.ContainsFunc(c.Users, func(p UserConfig) bool {
 		return p.Name == candidate.Name
 	})
 }
+
+// HasContext checks if a context with the same name as the candidate exists in the Contexts slice. Returns true if found.
 func (c *AppConfig) HasContext(candidate ContextConfig) bool {
 	return slices.ContainsFunc(c.Contexts, func(p ContextConfig) bool {
 		return p.Name == candidate.Name
 	})
 }
+
+// GetActiveContext returns the active context configuration. Returns nil if no context is active.
 func (c *AppConfig) GetActiveContext() *ContextConfig {
 	if c.Current == "" {
 		return nil
