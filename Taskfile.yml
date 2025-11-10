@@ -1,0 +1,75 @@
+version: '3'
+
+vars:
+  BINARY_NAME: oscli
+  OUTPUT_DIR: dist
+  VERSION:
+    sh: echo $(git describe --tags --always | sed -E 's/([^-]+)-[0-9]+-g(.+)/\1-\2/')
+  VERSION_VAR: github.com/dalet-oss/opensearch-cli/cmd.Version
+
+tasks:
+  splitArgsTask:
+    cmds:
+      - echo "some command"
+  default:
+    desc: List all available tasks
+    cmds:
+      - task --list
+
+  prepare:
+    desc: prepare dir
+    cmd:  mkdir -p {{ .OUTPUT_DIR }}
+    silent: true
+  build-darwin:
+    deps: [prepare]
+    cmds:
+      - for:
+          matrix:
+            GOOS: [ 'darwin' ]
+            GOARCH: [ 'amd64', 'arm64' ]
+        cmd: |-
+          GOOS={{ .ITEM.GOOS }} GOARCH={{ .ITEM.GOARCH }} \
+          go build -ldflags="-X {{ .VERSION_VAR }}={{ .VERSION }}" \
+          -o {{ .OUTPUT_DIR }}/{{ .BINARY_NAME }}_{{ .ITEM.GOOS }}_{{ .ITEM.GOARCH }}_{{ .VERSION }} .
+    silent: true
+  build-linux:
+    deps: [prepare]
+    cmds:
+      - for:
+          matrix:
+            GOOS: [ 'linux']
+            GOARCH: [ 'amd64', 'arm64' ]
+        cmd: |-
+          GOOS={{ .ITEM.GOOS }} GOARCH={{ .ITEM.GOARCH }} \
+          go build -ldflags="-X {{ .VERSION_VAR }}={{ .VERSION }}" \
+          -o {{ .OUTPUT_DIR }}/{{ .BINARY_NAME }}_{{ .ITEM.GOOS }}_{{ .ITEM.GOARCH }}_{{ .VERSION }} .
+    silent: true
+  build-win:
+    deps: [prepare]
+    cmds:
+      - for:
+          matrix:
+            GOOS: [ 'windows' ]
+            GOARCH: [ 'amd64' ]
+        cmd: |-
+          GOOS={{ .ITEM.GOOS }} GOARCH={{ .ITEM.GOARCH }} \
+          go build -ldflags="-X {{ .VERSION_VAR }}={{ .VERSION }}" \
+          -o {{ .OUTPUT_DIR }}/{{ .BINARY_NAME }}_{{ .ITEM.GOOS }}_{{ .ITEM.GOARCH }}_{{ .VERSION }}.exe .
+    silent: true
+  build-all:
+    deps: [prepare,build-darwin,build-linux,build-win]
+    desc: Build the application for a specific platform and architecture
+    cmd:
+      echo building bins
+    silent: true
+
+  clean:
+    desc: Remove build artifacts
+    cmds:
+      - rm -rf {{ .OUTPUT_DIR }}
+    silent: true
+
+  test:
+    desc: Run tests for the application
+    cmds:
+      - go test ./...

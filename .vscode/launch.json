@@ -1,0 +1,71 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "inputs": [
+        {
+            "id": "devConfig",
+            "type": "promptString",
+            "description": "Enter the config location",
+            "default": "--config=${workspaceFolder}${pathSeparator}example.config"
+        },
+        // // ! THIS IS NOT USABLE ATM
+        // {
+        //     "id": "cliArgs",
+        //     "type": "promptString",
+        //     "description": "enter cli command you want to run",
+        //     "default": "--help"
+        // },
+        // {
+        //     "id": "splitArgs",
+        //     "type": "command",
+        //     "command": "splitArgsTask"
+        // }
+    ],  
+    "configurations": [
+        // ! THIS IS NOT USABLE ATM
+        // {    // this one is providing the same experience as for the real user config from original source
+        //     "name": "UX-li",
+        //     "type": "go",
+        //     "request": "launch",
+        //     "mode": "auto",
+        //     "program": "${workspaceFolder}",
+        // },
+        // {    // this one is providing the same experience as for the real user using ./example.config
+        //     "name": "DEV-UX-li",
+        //     "type": "go",
+        //     "request": "launch",
+        //     "mode": "auto",
+        //     "program": "${workspaceFolder}",
+        //     "args": [
+        //         "${input:devConfig}",
+        //         "${input:splitArgs}"
+        //     ]
+        // },
+        {
+            "name": "(example config)ctx cmd",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}",
+            "args": [
+                    "${input:devConfig}",
+                    "ctx"
+                ]
+        },
+        {
+            "name": "(example config)index list --all",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}",
+            "args": [
+                "${input:devConfig}",
+                 "index",
+                 "list",
+                 "--all"
+                ]
+        },
+    ]
+}
