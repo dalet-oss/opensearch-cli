@@ -83,7 +83,7 @@ func TestOpensearchWrapper_GetReplicationAutofollowStats(t *testing.T) {
 		{
 			Name:    "negative|get autofollow stats for AF with no remote cluster",
 			WantErr: false,
-			Wrapper: testWrapper(),
+			Wrapper: wrapperForContainer(LeaderContainer),
 			ExtraValidationFunc: func(t *testing.T, execResult any) {
 				afStats := execResult.(stats.ReplicationAutoFollowStatsResponse)
 				assert.Empty(t, afStats.AutofollowStats, "af stats expected to be empty")
