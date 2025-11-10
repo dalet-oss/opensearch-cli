@@ -12,7 +12,84 @@ import (
 )
 
 func TestOpensearchWrapper_GetReplicationAutofollowStats(t *testing.T) {
-	tests := []OSMultiContainerTest{}
+	replicatedIndex := "tc-replication-autofollow-stats-test"
+	ccrName := "autofollow-stats-test-remote"
+	tests := []OSMultiContainerTest{
+		{
+			Name:          "positive|get autofollow stats for perfectly configured AF",
+			WantErr:       false,
+			Shotgun:       leaderShotgunInstance(replicatedIndex, 10*time.Millisecond),
+			DocumentCount: fp.AsPointer(100),
+			Wrapper:       wrapperForContainer(MainContainer),
+			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
+				assert.NotNil(t, c)
+				t.Log("[leader]creating index")
+				assert.NoError(t, c.CreateIndex(replicatedIndex))
+				t.Log("[leader]configured]")
+			},
+			ConfigureFollowerFunc: func(t *testing.T, c *OpensearchWrapper) {
+				assert.NotNil(t, c)
+				t.Log("[follower]configuring remote cluster")
+				assert.NoError(t, c.ConfigureRemoteCluster(getNamedCCR(ccrName), true), "expected to configure remote cluster")
+				t.Log("[follower]creating af rules")
+				afRule := replication.CreateAutofollowReq{
+					Header: nil,
+					Body: replication.CreateAutofollowBody{
+						Name:         replicatedIndex,
+						LeaderAlias:  ccrName,
+						IndexPattern: replicatedIndex,
+					},
+				}
+				assert.NoError(t, c.CreateAutofollowRule(afRule, true))
+				time.Sleep(1 * time.Second)
+				t.Log("[follower]configured]")
+			},
+			PostFollowerFunc: func(t *testing.T, c *OpensearchWrapper) {
+				t.Log("[follower]cleaning up")
+				assert.NotNil(t, c)
+				assert.NoError(t, c.DeleteAutofollow(replication.DeleteAutofollowReq{
+					Header: nil,
+					Body: replication.DeleteAutofollowBody{
+						Name:        replicatedIndex,
+						LeaderAlias: ccrName,
+					},
+				}, true))
+				t.Log("[follower]cleaning up remote cluster")
+				assert.NoError(t, c.DeleteRemote(ccrName, true))
+				t.Log("[follower]stop replication")
+				if err := c.StopReplication(replicatedIndex, true); err != nil {
+					t.Log(err)
+				}
+				t.Log("[follower]cleaning up indices")
+				assert.NoError(t, c.DeleteIndex(replicatedIndex))
+				t.Log("[follower]cleaned up")
+			},
+			PostLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
+				assert.NotNil(t, c)
+				t.Log("[leader]cleaning up indexes")
+				assert.NoError(t, c.DeleteIndex(replicatedIndex))
+				t.Log("[leader]cleaned up")
+			},
+			ExtraValidationFunc: func(t *testing.T, execResult any) {
+				afStats := execResult.(stats.ReplicationAutoFollowStatsResponse)
+				afData := fp.Filter(afStats.AutofollowStats, func(afRuleStatistics stats.AutoFollowStats) bool {
+					return afRuleStatistics.Name == replicatedIndex && afRuleStatistics.Pattern == replicatedIndex
+				})
+				assert.NotEmpty(t, afStats.AutofollowStats, "af stats expected to be generated")
+				assert.NotEmpty(t, afData, "af rule expected to be presented")
+				assert.Equal(t, 1, afData[0].NumSuccessStartReplication, "af stats expected to be generated")
+			},
+		},
+		{
+			Name:    "negative|get autofollow stats for AF with no remote cluster",
+			WantErr: false,
+			Wrapper: testWrapper(),
+			ExtraValidationFunc: func(t *testing.T, execResult any) {
+				afStats := execResult.(stats.ReplicationAutoFollowStatsResponse)
+				assert.Empty(t, afStats.AutofollowStats, "af stats expected to be empty")
+			},
+		},
+	}
 	for _, tt := range tests {
 		t.Run(tt.Name, func(t *testing.T) {
 			// pre | post setup

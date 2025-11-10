@@ -337,6 +337,11 @@ func shotgunBasicDocument() string {
 	return fmt.Sprintf(`{"name":"test-index","type":"test-type","unique_field":"%s"}`, uuid.New().String())
 }
 
+// leaderShotgunInstance - creates a new shotgun instance for the leader cluster
+func leaderShotgunInstance(index string, delay time.Duration) *shotgun {
+	return NewShotgun(wrapperForContainer(LeaderContainer), false, index, shotgunBasicDocument, true, delay)
+}
+
 // TestShotgun test shotgun behaviour
 func TestShotgun(t *testing.T) {
 	gun := NewShotgun(

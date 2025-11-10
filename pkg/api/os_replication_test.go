@@ -39,10 +39,6 @@ func getStartReplicationQuery(replicatedIndexName string) replication.StartRepli
 	}
 }
 
-func leaderShotgunInstance(index string, delay time.Duration) *shotgun {
-	return NewShotgun(wrapperForContainer(LeaderContainer), false, index, shotgunBasicDocument, true, delay)
-}
-
 // TestOpensearchWrapper_CreateReplication tests creation of the replication task on the follower cluster.
 // The test is executed only if the cluster has replication plugin installed.
 // replication pre-requisites:
