@@ -10,25 +10,28 @@ import (
 	"github.com/opensearch-project/opensearch-go/v4"
 	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
 	"github.com/spf13/cobra"
-	"time"
 )
 import "github.com/dalet-oss/opensearch-cli/pkg/utils/logging"
 
 var log = logging.Logger()
 
-type ApiResponse map[string]interface{}
-
-const LightOperationTimeout = 10 * time.Second
-
+// OpensearchWrapper is a wrapper around the OpenSearch client that provides additional functionality.
+// It provides methods for common operations on the cluster, such as retrieving cluster settings and listing plugins.
+// It also provides a method for creating a new OpensearchWrapper instance using the provided cobra.Command for configuration and context.
+// The wrapper is used by the CLI commands to perform operations on the cluster.
+// The wrapper is also used by the unit tests to mock the OpenSearch client.
 type OpensearchWrapper struct {
 	Client *opensearch.Client
 	Config appconfig.AppConfig
 }
 
+// requestContext initializes a context with a timeout defined by the ServerCallTimeout configuration.
+// Returns a cancellable context and its cancel function.
 func (a *OpensearchWrapper) requestContext() (context.Context, context.CancelFunc) {
 	return context.WithTimeout(context.TODO(), a.Config.ServerCallTimeout())
 }
 
+// NewFromCmd creates a new OpensearchWrapper instance using the provided cobra.Command for configuration and context.
 func NewFromCmd(cmd *cobra.Command) *OpensearchWrapper {
 	wrapper, err := New(
 		configutils.LoadConfig(flagutils.GetStringFlag(cmd.Flags(), consts.ConfigFlag)),
@@ -41,6 +44,7 @@ func NewFromCmd(cmd *cobra.Command) *OpensearchWrapper {
 	return wrapper
 }
 
+// New creates a new OpensearchWrapper instance using the provided appconfig.AppConfig and context.
 func New(c appconfig.AppConfig, ctx context.Context) (*OpensearchWrapper, error) {
 	client, err := GetOpenSearchClient(c, ctx)
 	if err != nil {
@@ -52,7 +56,7 @@ func New(c appconfig.AppConfig, ctx context.Context) (*OpensearchWrapper, error)
 	}, nil
 }
 
-// Generic methods for wrapper | not specific to plugin
+// ClusterSettings retrieves and logs the current settings of the OpenSearch cluster, excluding default settings.
 func (a *OpensearchWrapper) ClusterSettings() error {
 	ctx, cancelFunc := a.requestContext()
 	defer cancelFunc()
@@ -67,6 +71,7 @@ func (a *OpensearchWrapper) ClusterSettings() error {
 	return nil
 }
 
+// PluginsList retrieves and logs the list of installed plugins from the OpenSearch cluster.
 func (a *OpensearchWrapper) PluginsList() ([]opensearchapi.CatPluginResp, error) {
 	ctx, cancelFunc := a.requestContext()
 	defer cancelFunc()

@@ -30,6 +30,10 @@ func (api *OpensearchWrapper) CreateReplication(opts replication.StartReplicatio
 	return nil
 }
 
+// PauseReplication pauses the replication for the specified index in OpenSearch.
+// indexName specifies the name of the index whose replication is to be paused.
+// raw determines whether the raw response from the API call should be logged.
+// Returns an error if the API request fails or the response indicates an error.
 func (api *OpensearchWrapper) PauseReplication(indexName string, raw bool) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
@@ -49,6 +53,11 @@ func (api *OpensearchWrapper) PauseReplication(indexName string, raw bool) error
 	}
 	return nil
 }
+
+// ResumeReplication resumes the replication for the specified index in OpenSearch.
+// indexName specifies the name of the index whose replication is to be resumed.
+// raw determines whether the raw response from the API call should be logged.
+// Returns an error if the API request fails or the response indicates an error.
 func (api *OpensearchWrapper) ResumeReplication(indexName string, raw bool) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
@@ -68,6 +77,9 @@ func (api *OpensearchWrapper) ResumeReplication(indexName string, raw bool) erro
 	}
 	return nil
 }
+
+// StopReplication stops the replication process for the specified index in OpenSearch.
+// It optionally logs the raw response if the raw parameter is true. Returns an error if the operation fails.
 func (api *OpensearchWrapper) StopReplication(indexName string, raw bool) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
@@ -88,6 +100,9 @@ func (api *OpensearchWrapper) StopReplication(indexName string, raw bool) error 
 	return nil
 }
 
+// StatusReplication retrieves the replication status of a specified index in OpenSearch.
+// It fetches detailed replication statistics and logs the response based on verbosity.
+// Returns the IndexReplicationStatsResponse and an error, if any occurred during the operation.
 func (api *OpensearchWrapper) StatusReplication(indexName string, raw bool) (tstats.IndexReplicationStatsResponse, error) {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
@@ -108,6 +123,9 @@ func (api *OpensearchWrapper) StatusReplication(indexName string, raw bool) (tst
 	}
 	return result, nil
 }
+
+// TaskStatusReplication retrieves the recovery status of a specified index in OpenSearch with optional detailed and raw outputs.
+// It uses the CatRecovery API to fetch recovery details and logs the results based on the raw parameter.
 func (api *OpensearchWrapper) TaskStatusReplication(index string, detailed, raw bool) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()

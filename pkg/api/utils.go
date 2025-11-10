@@ -13,12 +13,14 @@ const (
 	CCRPlugin      = "opensearch-cross-cluster-replication"
 )
 
+// HasPlugin checks if a plugin with the given name exists in the provided list of plugins.
 func HasPlugin(pluginsList []opensearchapi.CatPluginResp, name string) bool {
 	return slices.ContainsFunc(pluginsList, func(e opensearchapi.CatPluginResp) bool {
 		return strings.Contains(e.Component, name)
 	})
 }
 
+// getClusterSettings retrieves the cluster settings from the OpenSearch cluster and returns the response or an error.
 func (api *OpensearchWrapper) getClusterSettings() (opensearchapi.ClusterGetSettingsResp, error) {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
@@ -30,6 +32,7 @@ func (api *OpensearchWrapper) getClusterSettings() (opensearchapi.ClusterGetSett
 	return result, nil
 }
 
+// buildClusterRemoteDeleteMap constructs a map to delete the remote cluster from the OpenSearch
 func buildClusterRemoteDeleteMap(remoteName string, toNull map[string]interface{}) map[string]interface{} {
 	return map[string]interface{}{
 		"cluster": map[string]interface{}{
@@ -40,6 +43,10 @@ func buildClusterRemoteDeleteMap(remoteName string, toNull map[string]interface{
 	}
 }
 
+// deleteRemote deletes the remote cluster from the OpenSearch cluster.
+// It returns a map with the settings to be updated.
+// If the remote cluster is not found, it returns an empty map.
+// If the remote cluster is found, it returns a map with the settings to be updated.
 func deleteRemote(remoteName string, settings opensearchapi.ClusterGetSettingsResp) (result map[string]interface{}) {
 	result = make(map[string]interface{})
 	var persistentSettings map[string]interface{}
@@ -66,6 +73,7 @@ func deleteRemote(remoteName string, settings opensearchapi.ClusterGetSettingsRe
 	return result
 }
 
+// jsonNullify takes a map of string keys and arbitrary values, and returns a new map with all values set to nil.
 func jsonNullify(in map[string]interface{}) map[string]interface{} {
 	out := make(map[string]interface{})
 	for _, k := range maps.Keys(in) {
@@ -74,6 +82,9 @@ func jsonNullify(in map[string]interface{}) map[string]interface{} {
 	return out
 }
 
+// findRemoteSettings finds the remote settings in the given settings map.
+// It returns the remote settings map if found, or nil if not found.
+// It returns a boolean indicating whether the remote settings were found.
 func findRemoteSettings(remoteName string, settings map[string]interface{}) (map[string]interface{}, bool) {
 	if v, ok := settings["cluster"]; !ok {
 		return nil, false

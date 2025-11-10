@@ -25,6 +25,7 @@ type CCRCreateOpts struct {
 	RemoteAddr string
 }
 
+// BuildCCRParams - builds the CCR settings
 func (opts CCRCreateOpts) BuildCCRParams() []byte {
 	settings := map[string]interface{}{
 		fp.GetOrDefault(opts.Type, "persistent", fp.NotEmptyString): map[string]interface{}{
@@ -41,6 +42,7 @@ func (opts CCRCreateOpts) BuildCCRParams() []byte {
 	return printutils.MarshalJSONOrDie(settings)
 }
 
+// ConfigureRemoteCluster configures a remote cluster for cross-cluster replication using the provided CCRCreateOpts settings.
 func (api *OpensearchWrapper) ConfigureRemoteCluster(opts CCRCreateOpts, raw bool) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
@@ -65,6 +67,7 @@ func (api *OpensearchWrapper) ConfigureRemoteCluster(opts CCRCreateOpts, raw boo
 	return nil
 }
 
+// GetRemoteSettings retrieves the cluster's remote settings from OpenSearch, either in raw or formatted output.
 func (api *OpensearchWrapper) GetRemoteSettings(raw bool) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
@@ -103,6 +106,9 @@ func (api *OpensearchWrapper) GetRemoteSettings(raw bool) error {
 	return nil
 }
 
+// DeleteRemote removes the specified remote cluster configuration from the OpenSearch cluster.
+// It returns an error if the operation fails or the remote cluster does not exist.
+// The raw parameter controls whether the raw response is logged.
 func (api *OpensearchWrapper) DeleteRemote(remoteName string, raw bool) error {
 	settings, err := api.getClusterSettings()
 	if err != nil {
