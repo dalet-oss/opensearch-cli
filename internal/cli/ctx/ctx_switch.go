@@ -27,7 +27,7 @@ If context name is not provided, it will prompt for the context name(from the li
 			if config.HasContext(appconfig.ContextConfig{Name: args[0]}) {
 				config.Current = args[0]
 			} else {
-				fmt.Println(fmt.Sprintf("requested context '%s' is not found.", args[0]))
+				fmt.Printf("requested context '%s' is not found.\n", args[0])
 				return
 			}
 		} else {

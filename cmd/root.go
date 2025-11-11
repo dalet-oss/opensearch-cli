@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/dalet-oss/opensearch-cli/internal/cli"
 	"github.com/dalet-oss/opensearch-cli/internal/cli/autofollow"
 	"github.com/dalet-oss/opensearch-cli/internal/cli/ccr"
 	"github.com/dalet-oss/opensearch-cli/internal/cli/ctx"
@@ -73,7 +72,6 @@ func init() {
 		index.NewIndexCmd(),
 		stats.NewStatsCmd(),
 		ccr.NewCCRCmd(),
-		cli.NewClusterCmd(),
 		autofollow.NewAutofollowCmd(),
 		replication.NewReplicationCmd(),
 	)

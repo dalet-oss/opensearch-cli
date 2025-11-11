@@ -42,7 +42,7 @@ func (api *OpensearchWrapper) GetStatsLag(indexName string, raw bool) (tstats.In
 			log.Info().Msg("replication is not in progress")
 			log.Info().Msgf("reason:%s", result.Reason)
 		case "FAILED":
-			return result, errors.New(fmt.Sprintf("replication failed for index '%s'\nreason:\n%s", indexName, result.Reason))
+			return result, fmt.Errorf("replication failed for index '%s'\nreason:\n%s", indexName, result.Reason)
 		}
 	}
 	return result, nil
