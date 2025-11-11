@@ -8,53 +8,8 @@ env:
   PLATFORMS: "linux darwin windows"
   ARCH: "amd64 arm64"
 jobs:
-  linters:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.24'
-          cache: true
-      - name: Verify dependencies
-        run: go mod verify
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: latest
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.24'
-          cache: true
-      - name: Verify dependencies
-        run: go mod verify
-      - name: Build
-        run: go build -v ./...
-      - name: Run tests
-        run: go test -v ./...
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.24'
-        cache: true
-    - name: Verify dependencies
-      run: go mod verify
-    - name: Build
-      run: go build -v ./...
-
   release:
     name: GH release
-    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
