@@ -61,21 +61,21 @@ func CreateClusterEntry(conf appconfig.AppConfig) appconfig.ClusterConfig {
 	}); len(clusterName) > 0 {
 		clusterConfig.Name = clusterName
 	}
-	if clusterUrl := prompts.SimplePrompt("Cluster url"); len(clusterUrl) == 0 {
+	if clusterURL := prompts.SimplePrompt("Cluster url"); len(clusterURL) == 0 {
 		log.Fatal().Msg("Cluster url is required")
 	} else {
 		clusterConfig.Params = appconfig.ClusterParams{
-			Server: clusterUrl,
+			Server: clusterURL,
 		}
 	}
-	if enableTls := prompts.ValidatedPrompt("Skip TLS verify(t|true|f|false)", func(input string) error {
+	if skipTLSVerify := prompts.ValidatedPrompt("Skip TLS verify(t|true|f|false)", func(input string) error {
 		_, err := strconv.ParseBool(input)
 		return err
-	}); len(enableTls) == 0 {
-		clusterConfig.Params.Tls = false
+	}); len(skipTLSVerify) == 0 {
+		clusterConfig.Params.SkipTLSVerify = false
 	} else {
-		v, _ := strconv.ParseBool(enableTls)
-		clusterConfig.Params.Tls = v
+		v, _ := strconv.ParseBool(skipTLSVerify)
+		clusterConfig.Params.SkipTLSVerify = v
 	}
 
 	if len(clusterConfig.Name) == 0 {

@@ -125,8 +125,8 @@ func ConfigTContainer(c *tcopensearch.OpenSearchContainer) *appconfig.AppConfig 
 			{
 				Name: cName,
 				Params: appconfig.ClusterParams{
-					Server: addr,
-					Tls:    false,
+					Server:        addr,
+					SkipTLSVerify: false,
 				},
 			},
 		},

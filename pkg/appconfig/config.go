@@ -82,7 +82,7 @@ func (c *AppConfig) ShowContextInfoExtended(name string) string {
 		if cluster := c.GetCluster(ctx.Cluster); cluster != nil {
 			info = append(info, fmt.Sprintf("	Cluster: %s", cluster.Name))
 			info = append(info, fmt.Sprintf("		Server: %s", cluster.Params.Server))
-			info = append(info, fmt.Sprintf("		TLS: %t", cluster.Params.Tls))
+			info = append(info, fmt.Sprintf("		TLS: %t", cluster.Params.SkipTLSVerify))
 		} else {
 			info = append(info, "	❌cluster is not found")
 		}
@@ -207,8 +207,8 @@ func Example() AppConfig {
 			{
 				Name: "example-cluster",
 				Params: ClusterParams{
-					Server: "http://localhost:9200",
-					Tls:    false,
+					Server:        "http://localhost:9200",
+					SkipTLSVerify: false,
 				},
 			},
 		},

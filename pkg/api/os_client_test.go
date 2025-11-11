@@ -95,8 +95,8 @@ func TestBuildOSConfig(t *testing.T) {
 						{
 							Name: cName,
 							Params: appconfig.ClusterParams{
-								Server: "http://localhost:9200",
-								Tls:    false,
+								Server:        "http://localhost:9200",
+								SkipTLSVerify: false,
 							},
 						},
 					},
@@ -121,8 +121,8 @@ func TestBuildOSConfig(t *testing.T) {
 						{
 							Name: cName,
 							Params: appconfig.ClusterParams{
-								Server: "http://localhost:9200",
-								Tls:    false,
+								Server:        "http://localhost:9200",
+								SkipTLSVerify: false,
 							},
 						},
 					},
@@ -159,8 +159,8 @@ func TestBuildOSConfig(t *testing.T) {
 						{
 							Name: cName,
 							Params: appconfig.ClusterParams{
-								Server: "http://localhost:9200",
-								Tls:    false,
+								Server:        "http://localhost:9200",
+								SkipTLSVerify: false,
 							},
 						},
 					},
@@ -260,8 +260,8 @@ func TestGetOpenSearchClient(t *testing.T) {
 					{
 						Name: cName,
 						Params: appconfig.ClusterParams{
-							Server: "http://fake.local:9200",
-							Tls:    false,
+							Server:        "http://fake.local:9200",
+							SkipTLSVerify: false,
 						},
 					},
 				},

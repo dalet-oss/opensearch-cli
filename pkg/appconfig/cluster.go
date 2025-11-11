@@ -12,6 +12,6 @@ type ClusterConfig struct {
 type ClusterParams struct {
 	// Server holds the cluster server address.
 	Server string `yaml:"server"`
-	// Tls indicates whether TLS encryption is enabled for the cluster connection.
-	Tls bool `yaml:"skipTlsVerify"`
+	// SkipTLSVerify indicates whether TLS encryption is enabled for the cluster connection.
+	SkipTLSVerify bool `yaml:"skipTLSVerify"`
 }
