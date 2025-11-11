@@ -21,6 +21,11 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     needs: linters
+    strategy:
+      matrix:
+        osVersion:
+          - '2'
+          - '3'
     steps:
       - uses: actions/checkout@v5
       - name: Set up Go
@@ -30,7 +35,7 @@ jobs:
           cache: true
       - name: Verify dependencies
         run: go mod verify
+      - name: Run tests
+        run: go test -ldflags="-X github.com/dalet-oss/opensearch-cli/pkg/api.OSVersion=${{matrix.osVersion}}" -v ./...
       - name: Build
         run: go build -v ./...
-      - name: Run tests
-        run: go test -v ./...

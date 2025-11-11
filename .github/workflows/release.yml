@@ -23,6 +23,13 @@ jobs:
       contents: write
     steps:
     - uses: actions/checkout@v5
+    - name: meta
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        tags: |
+          type=ref,event=branch
+          type=semver,pattern={{version}}
     - name: Set up Go
       uses: actions/setup-go@v6
       with:
@@ -38,7 +45,7 @@ jobs:
         echo "GOARCH=$GOARCH" >> $GITHUB_ENV
     - name: Build
       run: |
-        go build -o "$BINARY_NAME" .
+        go build -ldflags="-X github.com/dalet-oss/opensearch-cli/cmd.Version=${{ steps.meta.outputs.tags }}" -o "$BINARY_NAME" .
     - name: Release Notes
       run:
         git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * %an <%ae>' --no-merges >> ".github/RELEASE-TEMPLATE.md"
