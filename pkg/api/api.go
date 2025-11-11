@@ -27,8 +27,8 @@ type OpensearchWrapper struct {
 
 // requestContext initializes a context with a timeout defined by the ServerCallTimeout configuration.
 // Returns a cancellable context and its cancel function.
-func (a *OpensearchWrapper) requestContext() (context.Context, context.CancelFunc) {
-	return context.WithTimeout(context.TODO(), a.Config.ServerCallTimeout())
+func (api *OpensearchWrapper) requestContext() (context.Context, context.CancelFunc) {
+	return context.WithTimeout(context.TODO(), api.Config.ServerCallTimeout())
 }
 
 // NewFromCmd creates a new OpensearchWrapper instance using the provided cobra.Command for configuration and context.
@@ -57,11 +57,11 @@ func New(c appconfig.AppConfig, ctx context.Context) (*OpensearchWrapper, error)
 }
 
 // ClusterSettings retrieves and logs the current settings of the OpenSearch cluster, excluding default settings.
-func (a *OpensearchWrapper) ClusterSettings() error {
-	ctx, cancelFunc := a.requestContext()
+func (api *OpensearchWrapper) ClusterSettings() error {
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var rspData interface{}
-	_, err := a.Client.Do(ctx, opensearchapi.ClusterGetSettingsReq{
+	_, err := api.Client.Do(ctx, opensearchapi.ClusterGetSettingsReq{
 		Params: opensearchapi.ClusterGetSettingsParams{IncludeDefaults: opensearch.ToPointer(false)},
 	}, &rspData)
 	if err != nil {
@@ -72,11 +72,11 @@ func (a *OpensearchWrapper) ClusterSettings() error {
 }
 
 // PluginsList retrieves and logs the list of installed plugins from the OpenSearch cluster.
-func (a *OpensearchWrapper) PluginsList() ([]opensearchapi.CatPluginResp, error) {
-	ctx, cancelFunc := a.requestContext()
+func (api *OpensearchWrapper) PluginsList() ([]opensearchapi.CatPluginResp, error) {
+	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var rspData []opensearchapi.CatPluginResp
-	_, err := a.Client.Do(ctx, opensearchapi.CatPluginsReq{Params: opensearchapi.CatPluginsParams{}}, &rspData)
+	_, err := api.Client.Do(ctx, opensearchapi.CatPluginsReq{Params: opensearchapi.CatPluginsParams{}}, &rspData)
 	if err != nil {
 		return nil, err
 
