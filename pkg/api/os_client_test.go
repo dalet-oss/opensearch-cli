@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/dalet-oss/opensearch-cli/pkg/appconfig"
 	"github.com/dalet-oss/opensearch-cli/pkg/consts"
+	configutils "github.com/dalet-oss/opensearch-cli/pkg/utils/config"
 	"github.com/dalet-oss/opensearch-cli/pkg/utils/creds"
 	"github.com/opensearch-project/opensearch-go/v4"
 	"github.com/stretchr/testify/assert"
@@ -180,7 +181,7 @@ func TestBuildOSConfig(t *testing.T) {
 						},
 					},
 				},
-				ctx: context.WithValue(context.TODO(), consts.VaultPasswordFlag, "wrong"),
+				ctx: context.WithValue(context.TODO(), configutils.CliContextKey(consts.VaultPasswordFlag), "wrong"),
 			},
 			WantErr: true,
 		},
@@ -239,7 +240,7 @@ func TestGetOpenSearchClient(t *testing.T) {
 		{
 			name:    "nil client|wrong creds",
 			config:  *ConfigTContainer(opensearchContainer),
-			ctx:     context.WithValue(context.TODO(), consts.VaultPasswordFlag, "wrong"),
+			ctx:     context.WithValue(context.TODO(), configutils.CliContextKey(consts.VaultPasswordFlag), "wrong"),
 			WantErr: true,
 			ValidatorFunc: func(t *testing.T, cl *opensearch.Client) {
 				assert.Nil(t, cl)

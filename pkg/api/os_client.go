@@ -13,8 +13,7 @@ import (
 // It retrieves the active context, cluster, and user details, and incorporates user credentials into the configuration.
 // The function panics if required elements like contexts, clusters, or users are missing or invalid.
 func BuildOSConfig(c appconfig.AppConfig, ctx context.Context) (opensearch.Config, error) {
-	var ccfg *appconfig.ContextConfig
-	ccfg = c.GetActiveContext()
+	ccfg := c.GetActiveContext()
 	if ccfg == nil {
 		return opensearch.Config{},
 			fmt.Errorf("context config is not found, active context is set to '%s'", c.Current)

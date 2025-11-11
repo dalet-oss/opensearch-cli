@@ -6,6 +6,7 @@ import (
 	"github.com/dalet-oss/opensearch-cli/pkg/api/types/replication"
 	"github.com/dalet-oss/opensearch-cli/pkg/appconfig"
 	"github.com/dalet-oss/opensearch-cli/pkg/consts"
+	configutils "github.com/dalet-oss/opensearch-cli/pkg/utils/config"
 	"github.com/dalet-oss/opensearch-cli/pkg/utils/creds"
 	"github.com/dalet-oss/opensearch-cli/pkg/utils/fp"
 	printutils "github.com/dalet-oss/opensearch-cli/pkg/utils/print"
@@ -71,7 +72,7 @@ var (
 	// config configuration of the opensearch-cli used for tests
 	config *appconfig.AppConfig
 	// contextWithPassword context with the password of the vault [prevents interactive password ask]
-	contextWithPassword = context.WithValue(context.Background(), consts.VaultPasswordFlag, vaultPassword)
+	contextWithPassword = context.WithValue(context.Background(), configutils.CliContextKey(consts.VaultPasswordFlag), vaultPassword)
 )
 
 func getCCR() CCRCreateOpts {
