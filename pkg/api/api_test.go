@@ -26,12 +26,12 @@ func TestMain(m *testing.M) {
 		var errx error
 		for kKey, vContainer := range osCtrx {
 			if err := vContainer.Terminate(context.Background()); err != nil {
-				errors.Join(errx, err)
+				errx = errors.Join(errx, err)
 			}
 			delete(osCtrx, kKey)
 		}
 		if errNet := net.Remove(ctx); errNet != nil {
-			errors.Join(errx, errNet)
+			errx = errors.Join(errx, errNet)
 		}
 		if errx != nil {
 			log.Fatal().Err(errx)
