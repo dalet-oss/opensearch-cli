@@ -12,7 +12,13 @@ New developers must have [`gobrew`](https://github.com/kevincobain2000/gobrew) i
 
 OpenSearch CLI provides a convenient way to manage and interact with OpenSearch clusters directly from your terminal. The tool supports various operations including querying, index management, and cluster administration tasks.
 
+Available set of commands described in the [docs](docs/opensearch-cli.md)
+
 ## Installation
+
+Release binaries could be downloaded from the [GH releases.](https://github.com/dalet-oss/opensearch-cli/releases)
+
+## Installation from sources
 
 ### Prerequisites
 
@@ -46,10 +52,10 @@ Run `opensearch-cli --help` to see available commands and options.
 ## Dependencies
 
 This project utilizes the following libraries:
-- github.com/opensearch-project/opensearch-go - OpenSearch Go client
-- github.com/spf13/cobra - Command line interface framework
-- github.com/manifoldco/promptui - Interactive prompt for command-line applications
-- github.com/zalando/go-keyring - Secure credential storage
+- [OpenSearch Go client](github.com/opensearch-project/opensearch-go) 
+- [spf13/Cobra](github.com/spf13/cobra): cli framework
+- [manifoldco/promptui](github.com/manifoldco/promptui): interactive prompts
+- [zalando/go-keyring](github.com/zalando/go-keyring): keyring creds storage for MacOS/Linux
 
 ## Contributing
 
@@ -61,5 +67,5 @@ This project is licensed under the terms of the LICENSE file included in the rep
 
 ## Acknowledgments
 
-- OpenSearch Project for providing the Go client library
+- [OpenSearch Project](github.com/opensearch-project) for providing the Go client library
 - All contributors who have helped with the development of this tool
