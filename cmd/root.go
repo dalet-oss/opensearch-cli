@@ -78,9 +78,10 @@ func init() {
 func NewGendocCmd(rootCmd *cobra.Command) *cobra.Command {
 	var docDir string
 	var docCmd = &cobra.Command{
-		Use:    "gendoc",
-		Short:  "Generate Markdown documentation for the app",
-		Hidden: true,
+		Use:     "gendoc",
+		Aliases: []string{"doc", "docs"},
+		Short:   "Generate Markdown documentation for the app",
+		Hidden:  true,
 		Run: func(cmd *cobra.Command, args []string) {
 			if _, err := os.Stat("docs"); os.IsExist(err) {
 				_ = os.RemoveAll("docs")
