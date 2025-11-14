@@ -12,7 +12,9 @@ New developers must have [`gobrew`](https://github.com/kevincobain2000/gobrew) i
 
 OpenSearch CLI provides a convenient way to manage and interact with OpenSearch clusters directly from your terminal. The tool supports various operations including querying, index management, and cluster administration tasks.
 
-Available set of commands described in the [docs](docs/opensearch-cli.md)
+An available set of commands described in the [docs](docs/opensearch-cli.md)
+
+Config documentation is [here](docs/cli.md)
 
 ## Installation
 
