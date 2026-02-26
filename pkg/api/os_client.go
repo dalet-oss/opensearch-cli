@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"github.com/dalet-oss/opensearch-cli/pkg/appconfig"
+	"github.com/dalet-oss/opensearch-cli/pkg/consts"
 	"github.com/opensearch-project/opensearch-go/v4"
 	"net/http"
 )
@@ -42,6 +43,9 @@ func BuildOSConfig(c appconfig.AppConfig, ctx context.Context) (opensearch.Confi
 		Addresses: []string{osConnection.Params.Server},
 		Username:  userCreds.Username,
 		Password:  userCreds.Password,
+	}
+	if (ctx.Value(consts.DebugFlag) != nil && ctx.Value(consts.DebugFlag).(bool)) || (c.CliParams != nil && c.CliParams.EnableDebugLogs()) {
+		config.EnableDebugLogger = true
 	}
 	return config, nil
 }

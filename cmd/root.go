@@ -62,6 +62,7 @@ func init() {
 	rootCmd.PersistentFlags().String(consts.ConfigFlag, "", "config file (default is $HOME/.dalet/oscli/config)")
 	rootCmd.PersistentFlags().String(consts.VaultPasswordFlag, "", "vault password for decrypting vault credentials")
 	rootCmd.PersistentFlags().Bool(consts.RawFlag, false, "show raw api response")
+	rootCmd.PersistentFlags().Bool(consts.DebugFlag, false, "enable debug mode")
 	// subcommands
 	rootCmd.AddCommand(
 		NewGendocCmd(rootCmd),

@@ -40,6 +40,8 @@ func (c *AppConfig) IsEmpty() bool {
 
 type CliParams struct {
 	ServerTimeoutSeconds *int `yaml:"serverTimeoutSeconds"`
+	// DebugLogs specifies whether to enable debug logging from the opensearch-go library.
+	DebugLogs *bool `yaml:"debugLogs"`
 }
 
 // GetServerTimeoutSeconds returns the server timeout in seconds, using a default value if none is configured.
@@ -48,6 +50,13 @@ func (p *CliParams) GetServerTimeoutSeconds() int {
 		return DefaultServerTimeoutSeconds
 	}
 	return *p.ServerTimeoutSeconds
+}
+
+func (p *CliParams) EnableDebugLogs() bool {
+	if p.DebugLogs == nil {
+		return false
+	}
+	return *p.DebugLogs
 }
 
 // ShowContextInfo returns a formatted string with context details, including cluster and user information.

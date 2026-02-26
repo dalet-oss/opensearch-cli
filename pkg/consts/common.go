@@ -31,6 +31,8 @@ const (
 	VaultPasswordFlag = "vault-password"
 	// DefaultRemoteClusterAlias is the default name alias used for identifying the remote OpenSearch cluster.
 	DefaultRemoteClusterAlias = "pyramid-replication"
+	// DebugFlag used to enable debug mode
+	DebugFlag = "debug"
 )
 
 // bootstrapAndGet bootstraps the config dir and returns the path to it.
