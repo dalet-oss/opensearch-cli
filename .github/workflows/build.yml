@@ -26,8 +26,3 @@ jobs:
         run: go mod verify
       - name: Build
         run: go build -v ./...
-
-  cli-doc:
-    if: github.actor != 'github-actions[bot]' && github.event.pull_request == false
-    needs: build
-    uses: ./.github/workflows/docs.yml
