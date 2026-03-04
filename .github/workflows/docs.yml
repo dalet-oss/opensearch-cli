@@ -1,4 +1,4 @@
-name: doc gen
+name: cli doc gen
 on:
   workflow_call: {}
 
@@ -18,11 +18,12 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git switch -c feature/auto-doc-update
           go run ./main.go docs
           
           git add .
           if [[ -n "$(git status --porcelain)" ]]; then
-            git commit -m "🤖: Update cli docs"
-            git push origin main
+            git commit -m "🤖: Update opensearch-cli docs"
+            git push origin feature/auto-doc-update
           fi
           
