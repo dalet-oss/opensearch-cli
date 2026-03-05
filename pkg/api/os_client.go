@@ -8,6 +8,7 @@ import (
 	"github.com/dalet-oss/opensearch-cli/pkg/consts"
 	"github.com/opensearch-project/opensearch-go/v4"
 	"net/http"
+	"net/url"
 )
 
 // BuildOSConfig constructs and returns an OpenSearch configuration based on the given app configuration.
@@ -34,12 +35,23 @@ func BuildOSConfig(c appconfig.AppConfig, ctx context.Context) (opensearch.Confi
 		log.Warn().Msg("Unable to get user credentials, check your config file.")
 		return opensearch.Config{}, err
 	}
-	config := opensearch.Config{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: osConnection.Params.SkipTLSVerify,
-			},
+
+	transport := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: osConnection.Params.SkipTLSVerify,
 		},
+	}
+	if len(osConnection.Params.ProxyUrl) > 0 {
+		transport.Proxy = func(req *http.Request) (*url.URL, error) {
+			parsed, err := url.Parse(osConnection.Params.ProxyUrl)
+			if err != nil {
+				return nil, err
+			}
+			return parsed, nil
+		}
+	}
+	config := opensearch.Config{
+		Transport: transport,
 		Addresses: []string{osConnection.Params.Server},
 		Username:  userCreds.Username,
 		Password:  userCreds.Password,
