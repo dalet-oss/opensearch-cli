@@ -14,4 +14,6 @@ type ClusterParams struct {
 	Server string `yaml:"server"`
 	// SkipTLSVerify indicates whether TLS encryption is enabled for the cluster connection.
 	SkipTLSVerify bool `yaml:"skipTLSVerify"`
+	// ProxyUrl holds the proxy URL for the cluster connection.
+	ProxyUrl string `yaml:"proxy-url,omitempty"`
 }

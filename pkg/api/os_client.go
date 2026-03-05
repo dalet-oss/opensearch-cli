@@ -7,7 +7,9 @@ import (
 	"github.com/dalet-oss/opensearch-cli/pkg/appconfig"
 	"github.com/dalet-oss/opensearch-cli/pkg/consts"
 	"github.com/opensearch-project/opensearch-go/v4"
+	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
 	"net/http"
+	"net/url"
 )
 
 // BuildOSConfig constructs and returns an OpenSearch configuration based on the given app configuration.
@@ -34,12 +36,23 @@ func BuildOSConfig(c appconfig.AppConfig, ctx context.Context) (opensearch.Confi
 		log.Warn().Msg("Unable to get user credentials, check your config file.")
 		return opensearch.Config{}, err
 	}
-	config := opensearch.Config{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: osConnection.Params.SkipTLSVerify,
-			},
+
+	transport := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: osConnection.Params.SkipTLSVerify,
 		},
+	}
+	if len(osConnection.Params.ProxyUrl) > 0 {
+		transport.Proxy = func(req *http.Request) (*url.URL, error) {
+			parsed, err := url.Parse(osConnection.Params.ProxyUrl)
+			if err != nil {
+				return nil, err
+			}
+			return parsed, nil
+		}
+	}
+	config := opensearch.Config{
+		Transport: transport,
 		Addresses: []string{osConnection.Params.Server},
 		Username:  userCreds.Username,
 		Password:  userCreds.Password,
@@ -56,14 +69,18 @@ func GetOpenSearchClient(c appconfig.AppConfig, ctx context.Context) (*opensearc
 	if osConfigErr != nil {
 		return nil, osConfigErr
 	}
-	if client, err := opensearch.NewClient(config); err != nil {
+
+	if client, clientInitErr := opensearchapi.NewClient(opensearchapi.Config{Client: config}); clientInitErr != nil {
 		log.Warn().Msg("unable to create client, check your config file.")
-		return nil, err
+		return nil, clientInitErr
 	} else {
-		if discoveyErr := client.DiscoverNodes(); discoveyErr != nil {
+		if clusterInfo, fetchInfoErr := client.Info(context.Background(), nil); fetchInfoErr != nil {
 			log.Warn().Msg("unable to discover nodes, check your config file.")
-			return nil, discoveyErr
+			return nil, fetchInfoErr
+		} else {
+			log.Debug().Interface("clusterInfo", clusterInfo).Msg("current cluster info")
+			log.Debug().Msg("client initialized")
 		}
-		return client, nil
+		return client.Client, nil
 	}
 }
