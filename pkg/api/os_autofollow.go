@@ -12,7 +12,7 @@ func (api *OpensearchWrapper) CreateAutofollowRule(opts replication.CreateAutofo
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 
-	var result interface{}
+	var result any
 	if rsp, err := api.Client.Do(ctx, opts, &result); err != nil {
 		return err
 	} else {
@@ -35,7 +35,7 @@ func (api *OpensearchWrapper) CreateAutofollowRule(opts replication.CreateAutofo
 func (api *OpensearchWrapper) DeleteAutofollow(opts replication.DeleteAutofollowReq, raw bool) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
-	var result interface{}
+	var result any
 
 	if rsp, err := api.Client.Do(ctx, opts, &result); err != nil {
 		return err

@@ -76,16 +76,16 @@ type ReplicationAutoFollowStatsResponse struct {
 	NumSuccessStartReplication int               `json:"num_success_start_replication"`
 	NumFailedStartReplication  int               `json:"num_failed_start_replication"`
 	NumFailedLeaderCalls       int               `json:"num_failed_leader_calls"`
-	FailedIndices              []interface{}     `json:"failed_indices"`
+	FailedIndices              []any             `json:"failed_indices"`
 	AutofollowStats            []AutoFollowStats `json:"autofollow_stats"`
 }
 
 // AutoFollowStats represents the response for getting replication auto-follow statistics for a single index.
 type AutoFollowStats struct {
-	Name                       string        `json:"name"`
-	Pattern                    string        `json:"pattern"`
-	NumSuccessStartReplication int           `json:"num_success_start_replication"`
-	NumFailedStartReplication  int           `json:"num_failed_start_replication"`
-	NumFailedLeaderCalls       int           `json:"num_failed_leader_calls"`
-	FailedIndices              []interface{} `json:"failed_indices"`
+	Name                       string `json:"name"`
+	Pattern                    string `json:"pattern"`
+	NumSuccessStartReplication int    `json:"num_success_start_replication"`
+	NumFailedStartReplication  int    `json:"num_failed_start_replication"`
+	NumFailedLeaderCalls       int    `json:"num_failed_leader_calls"`
+	FailedIndices              []any  `json:"failed_indices"`
 }

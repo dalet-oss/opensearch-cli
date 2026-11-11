@@ -40,7 +40,7 @@ func (api *OpensearchWrapper) GetIndexList() (IndexInfoResponse, error) {
 func (api *OpensearchWrapper) CreateIndex(indexName string) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
-	var result interface{}
+	var result any
 	rsp, e := api.Client.Do(ctx, opensearchapi.IndicesCreateReq{Index: indexName}, &result)
 	if e != nil {
 		return e
@@ -56,7 +56,7 @@ func (api *OpensearchWrapper) CreateIndex(indexName string) error {
 func (api *OpensearchWrapper) DeleteIndex(indexName string) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
-	var result interface{}
+	var result any
 	rsp, e := api.Client.Do(ctx, opensearchapi.IndicesDeleteReq{Indices: []string{indexName}}, &result)
 	if e != nil {
 		return e

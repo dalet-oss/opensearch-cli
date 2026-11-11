@@ -20,7 +20,7 @@ func TestOpensearchWrapper_GetReplicationAutofollowStats(t *testing.T) {
 			Name:          "positive|get autofollow stats for perfectly configured AF",
 			WantErr:       false,
 			Shotgun:       leaderShotgunInstance(replicatedIndex, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(100),
+			DocumentCount: new(100),
 			Wrapper:       wrapperForContainer(MainContainer),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				assert.NotNil(t, c)
@@ -136,7 +136,7 @@ func TestOpensearchWrapper_GetReplicationFollowerStats(t *testing.T) {
 			Name:          "positive|get follower stats for perfectly configured AF",
 			WantErr:       false,
 			Shotgun:       leaderShotgunInstance(replicatedIndex, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(100),
+			DocumentCount: new(100),
 			Wrapper:       wrapperForContainer(MainContainer),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				assert.NotNil(t, c)
@@ -236,7 +236,7 @@ func TestOpensearchWrapper_GetReplicationLeaderStats(t *testing.T) {
 			Name:          "positive|get leader stats for perfectly configured AF",
 			WantErr:       false,
 			Shotgun:       leaderShotgunInstance(replicatedIndex, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(100),
+			DocumentCount: new(100),
 			Wrapper:       wrapperForContainer(LeaderContainer),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				assert.NotNil(t, c)
@@ -337,7 +337,7 @@ func TestOpensearchWrapper_GetStatsLag(t *testing.T) {
 			WantErr:       false,
 			CaseInput:     replicatedIndex,
 			Shotgun:       leaderShotgunInstance(replicatedIndex, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(100),
+			DocumentCount: new(100),
 			Wrapper:       wrapperForContainer(MainContainer),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				assert.NotNil(t, c)
@@ -454,7 +454,7 @@ func TestOpensearchWrapper_ListOfAFRules(t *testing.T) {
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				assert.NotNil(t, c)
 				t.Log("[leader]creating index")
-				for i := 0; i < leaderIndexCount; i++ {
+				for i := range leaderIndexCount {
 					indexName := fmt.Sprintf("%s-%d", afIndexPattern[:(len(afIndexPattern)-2)], i)
 					t.Logf("[leader]creating index %s", indexName)
 					assert.NoError(t, c.CreateIndex(indexName), "")

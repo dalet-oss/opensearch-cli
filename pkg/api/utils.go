@@ -33,10 +33,10 @@ func (api *OpensearchWrapper) getClusterSettings() (opensearchapi.ClusterGetSett
 }
 
 // buildClusterRemoteDeleteMap constructs a map to delete the remote cluster from the OpenSearch
-func buildClusterRemoteDeleteMap(remoteName string, toNull map[string]interface{}) map[string]interface{} {
-	return map[string]interface{}{
-		"cluster": map[string]interface{}{
-			"remote": map[string]interface{}{
+func buildClusterRemoteDeleteMap(remoteName string, toNull map[string]any) map[string]any {
+	return map[string]any{
+		"cluster": map[string]any{
+			"remote": map[string]any{
 				remoteName: jsonNullify(toNull),
 			},
 		},
@@ -47,10 +47,10 @@ func buildClusterRemoteDeleteMap(remoteName string, toNull map[string]interface{
 // It returns a map with the settings to be updated.
 // If the remote cluster is not found, it returns an empty map.
 // If the remote cluster is found, it returns a map with the settings to be updated.
-func deleteRemote(remoteName string, settings opensearchapi.ClusterGetSettingsResp) (result map[string]interface{}) {
-	result = make(map[string]interface{})
-	var persistentSettings map[string]interface{}
-	var transientSettings map[string]interface{}
+func deleteRemote(remoteName string, settings opensearchapi.ClusterGetSettingsResp) (result map[string]any) {
+	result = make(map[string]any)
+	var persistentSettings map[string]any
+	var transientSettings map[string]any
 	parseErr := json.Unmarshal(settings.Persistent, &persistentSettings)
 	if parseErr != nil {
 		log.Fatal().Err(parseErr)
@@ -74,8 +74,8 @@ func deleteRemote(remoteName string, settings opensearchapi.ClusterGetSettingsRe
 }
 
 // jsonNullify takes a map of string keys and arbitrary values, and returns a new map with all values set to nil.
-func jsonNullify(in map[string]interface{}) map[string]interface{} {
-	out := make(map[string]interface{})
+func jsonNullify(in map[string]any) map[string]any {
+	out := make(map[string]any)
 	for _, k := range maps.Keys(in) {
 		out[k] = nil
 	}
@@ -85,19 +85,19 @@ func jsonNullify(in map[string]interface{}) map[string]interface{} {
 // findRemoteSettings finds the remote settings in the given settings map.
 // It returns the remote settings map if found, or nil if not found.
 // It returns a boolean indicating whether the remote settings were found.
-func findRemoteSettings(remoteName string, settings map[string]interface{}) (map[string]interface{}, bool) {
+func findRemoteSettings(remoteName string, settings map[string]any) (map[string]any, bool) {
 	if v, ok := settings["cluster"]; !ok {
 		return nil, false
 	} else {
-		clusterSettings := v.(map[string]interface{})
+		clusterSettings := v.(map[string]any)
 		if v, hasRemote := clusterSettings["remote"]; !hasRemote {
 			return nil, false
 		} else {
-			remoteSettings := v.(map[string]interface{})
+			remoteSettings := v.(map[string]any)
 			if remoteConfig, hasRemoteWithName := remoteSettings[remoteName]; !hasRemoteWithName {
 				return nil, false
 			} else {
-				return remoteConfig.(map[string]interface{}), true
+				return remoteConfig.(map[string]any), true
 			}
 		}
 	}

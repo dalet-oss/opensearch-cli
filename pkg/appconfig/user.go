@@ -42,8 +42,8 @@ type VaultConfig struct {
 }
 
 type CredentialsExec struct {
-	Cmd  string        `yaml:"cmd"`
-	Args []interface{} `json:"args"`
+	Cmd  string `yaml:"cmd"`
+	Args []any  `json:"args"`
 }
 
 // GetUserCredentials retrieves and decrypts user credentials based on the configuration, such as token or vault settings.

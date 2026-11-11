@@ -27,11 +27,11 @@ type CCRCreateOpts struct {
 
 // BuildCCRParams - builds the CCR settings
 func (opts CCRCreateOpts) BuildCCRParams() []byte {
-	settings := map[string]interface{}{
-		fp.GetOrDefault(opts.Type, "persistent", fp.NotEmptyString): map[string]interface{}{
-			"cluster": map[string]interface{}{
-				"remote": map[string]interface{}{
-					opts.RemoteName: map[string]interface{}{
+	settings := map[string]any{
+		fp.GetOrDefault(opts.Type, "persistent", fp.NotEmptyString): map[string]any{
+			"cluster": map[string]any{
+				"remote": map[string]any{
+					opts.RemoteName: map[string]any{
 						"mode":          fp.GetOrDefault(opts.Mode, "proxy", fp.NotEmptyString),
 						"proxy_address": opts.RemoteAddr,
 					},
@@ -83,11 +83,11 @@ func (api *OpensearchWrapper) GetRemoteSettings(raw bool) error {
 			log.Info().Msg(printutils.RawResponse(rsp))
 			return nil
 		} else {
-			var persistentSettings map[string]interface{}
-			var clusterRemoteSettings interface{}
+			var persistentSettings map[string]any
+			var clusterRemoteSettings any
 			_ = json.Unmarshal(result.Persistent, &persistentSettings)
 			if clusterSettings, ok := persistentSettings["cluster"]; ok {
-				if clusterSettingsMap, canCast := clusterSettings.(map[string]interface{}); canCast {
+				if clusterSettingsMap, canCast := clusterSettings.(map[string]any); canCast {
 					if rSettings, found := clusterSettingsMap["remote"]; found {
 						clusterRemoteSettings = rSettings
 					} else {
