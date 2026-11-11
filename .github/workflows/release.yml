@@ -47,7 +47,7 @@ jobs:
         echo "GOARCH=$GOARCH" >> $GITHUB_ENV
     - name: Build
       run: |
-        go build -ldflags="-X github.com/dalet-oss/opensearch-cli/cmd.Version=${{ steps.meta.outputs.tags }}" -o "$BINARY_NAME" .
+        go build -trimpath -ldflags="-X github.com/dalet-oss/opensearch-cli/cmd.Version=${{ steps.meta.outputs.tags }}" -o "$BINARY_NAME" .
     - name: Release Notes
       run:
         git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * %an <%ae>' --no-merges >> ".github/RELEASE-TEMPLATE.md"
