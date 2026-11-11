@@ -1,6 +1,10 @@
 version: "2"
 linters:
   settings:
+    govet:
+      disable:
+        # false positives on generic stdlib calls ("type parameter inference is not yet supported")
+        - inline
     staticcheck:
       checks:
         - '-SA1029'
