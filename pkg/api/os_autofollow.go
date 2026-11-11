@@ -2,8 +2,11 @@ package api
 
 import (
 	"errors"
+	"fmt"
 	"github.com/dalet-oss/opensearch-cli/pkg/api/types/replication"
+	tstats "github.com/dalet-oss/opensearch-cli/pkg/api/types/stats"
 	printutils "github.com/dalet-oss/opensearch-cli/pkg/utils/print"
+	"slices"
 )
 
 // CreateAutofollowRule - Automatically starts replication on indexes matching a specified pattern.
@@ -33,6 +36,16 @@ func (api *OpensearchWrapper) CreateAutofollowRule(opts replication.CreateAutofo
 // This operation prevents any new indexes from being replicated but does not stop existing replication that the rule has already initiated.
 // Replicated indexes remain read-only until you stop replication.
 func (api *OpensearchWrapper) DeleteAutofollow(opts replication.DeleteAutofollowReq, raw bool) error {
+	// OpenSearch 3.x acknowledges deletion of non-existent rules and missing leader alias, so validate on our side
+	if opts.Body.LeaderAlias == "" {
+		return errors.New("leader alias is required to delete autofollow rule")
+	}
+	if exists, err := api.autofollowRuleExists(opts.Body.Name); err != nil {
+		return err
+	} else if !exists {
+		return fmt.Errorf("no autofollow rule found with name '%s'", opts.Body.Name)
+	}
+
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	var result any
@@ -51,4 +64,22 @@ func (api *OpensearchWrapper) DeleteAutofollow(opts replication.DeleteAutofollow
 		}
 	}
 	return nil
+}
+
+// autofollowRuleExists checks whether an autofollow rule with the given name is configured.
+func (api *OpensearchWrapper) autofollowRuleExists(name string) (bool, error) {
+	ctx, cancelFunc := api.requestContext()
+	defer cancelFunc()
+
+	var result tstats.ReplicationAutoFollowStatsResponse
+	rsp, err := api.Client.Do(ctx, tstats.IndexReplicationAutoFollowStatsReq{}, &result)
+	if err != nil {
+		return false, err
+	}
+	if rsp.IsError() {
+		return false, errors.New(printutils.RawResponse(rsp))
+	}
+	return slices.ContainsFunc(result.AutofollowStats, func(afr tstats.AutoFollowStats) bool {
+		return afr.Name == name
+	}), nil
 }
