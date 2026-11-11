@@ -16,6 +16,7 @@ import (
 	"github.com/spf13/cobra/doc"
 	"os"
 	"path"
+	"runtime/debug"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -50,6 +51,18 @@ Some commands supports the operations with the wildcard(due to it's not availabl
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	// turn panics into a short error message, full stack trace only with --debug
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Fprintf(os.Stderr, "unexpected error: %v\n", r)
+			if flagutils.GetBoolFlag(rootCmd.PersistentFlags(), consts.DebugFlag) {
+				fmt.Fprintf(os.Stderr, "%s\n", debug.Stack())
+			} else {
+				fmt.Fprintln(os.Stderr, "re-run with --debug to see the stack trace")
+			}
+			os.Exit(2)
+		}
+	}()
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)

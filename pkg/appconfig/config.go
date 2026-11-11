@@ -2,7 +2,6 @@ package appconfig
 
 import (
 	"fmt"
-	"github.com/dalet-oss/opensearch-cli/pkg/utils/fp"
 	"slices"
 	"strings"
 	"time"
@@ -211,7 +210,7 @@ func (c *AppConfig) GetContextList() []string {
 func Example() AppConfig {
 	return AppConfig{
 		ApiVersion: ApiVersionV1,
-		CliParams:  &CliParams{ServerTimeoutSeconds: fp.AsPointer(DefaultServerTimeoutSeconds)},
+		CliParams:  &CliParams{ServerTimeoutSeconds: new(DefaultServerTimeoutSeconds)},
 		Clusters: []ClusterConfig{
 			{
 				Name: "example-cluster",

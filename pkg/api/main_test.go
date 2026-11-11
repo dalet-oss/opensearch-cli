@@ -7,7 +7,6 @@ import (
 	"github.com/dalet-oss/opensearch-cli/pkg/appconfig"
 	"github.com/dalet-oss/opensearch-cli/pkg/consts"
 	"github.com/dalet-oss/opensearch-cli/pkg/utils/creds"
-	"github.com/dalet-oss/opensearch-cli/pkg/utils/fp"
 	printutils "github.com/dalet-oss/opensearch-cli/pkg/utils/print"
 	"github.com/google/uuid"
 	"github.com/opensearch-project/opensearch-go/v4/opensearchapi"
@@ -119,7 +118,7 @@ func ConfigTContainer(c *tcopensearch.OpenSearchContainer) *appconfig.AppConfig 
 	return &appconfig.AppConfig{
 		ApiVersion: "v1",
 		CliParams: &appconfig.CliParams{
-			ServerTimeoutSeconds: fp.AsPointer(120),
+			ServerTimeoutSeconds: new(120),
 		},
 		Clusters: []appconfig.ClusterConfig{
 			{
@@ -192,7 +191,7 @@ type OSSingleContainerTest struct {
 	Wrapper       *OpensearchWrapper
 	ConfigureFunc func(t *testing.T, c *OpensearchWrapper)
 	PostFunc      func(t *testing.T, c *OpensearchWrapper)
-	CaseInput     interface{}
+	CaseInput     any
 	WantErr       bool
 }
 
@@ -217,7 +216,7 @@ type OSMultiContainerTest struct {
 	// PostFollowerFunc - a function is used to clean up the follower cluster after the test case
 	PostFollowerFunc func(t *testing.T, c *OpensearchWrapper)
 	// CaseInput - input for the test case
-	CaseInput interface{}
+	CaseInput any
 	// ExtraValidationFunc - a function which is used to validate the result of the test case in addition to the default validation
 	ExtraValidationFunc func(t *testing.T, execResult any)
 }

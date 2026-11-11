@@ -60,9 +60,9 @@ func New(c appconfig.AppConfig, ctx context.Context) (*OpensearchWrapper, error)
 func (api *OpensearchWrapper) ClusterSettings() error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
-	var rspData interface{}
+	var rspData any
 	_, err := api.Client.Do(ctx, opensearchapi.ClusterGetSettingsReq{
-		Params: opensearchapi.ClusterGetSettingsParams{IncludeDefaults: opensearch.ToPointer(false)},
+		Params: opensearchapi.ClusterGetSettingsParams{IncludeDefaults: new(false)},
 	}, &rspData)
 	if err != nil {
 		return err

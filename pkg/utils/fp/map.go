@@ -36,8 +36,10 @@ func NotEmptyString(s string) bool {
 }
 
 // AsPointer converts a value of any type to a pointer to that value.
+//
+//go:fix inline
 func AsPointer[T any](t T) *T {
-	return &t
+	return new(t)
 }
 
 // Ternary returns the value of `trueValue` if the `condition` is true, otherwise it returns the `falseValue`.

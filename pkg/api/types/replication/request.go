@@ -18,7 +18,7 @@ type StartReplicationBody struct {
 	LeaderAlias string `json:"leader_alias"`
 	LeaderIndex string `json:"leader_index"`
 	// UseRoles mandatory if security plugin enabled
-	UseRoles ReplicationRoles `json:"use_roles,omitempty"`
+	UseRoles ReplicationRoles `json:"use_roles"`
 }
 
 type ReplicationRoles struct {

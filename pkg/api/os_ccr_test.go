@@ -11,7 +11,7 @@ func TestCCRCreateOpts_BuildCCRParams(t *testing.T) {
 	tests := []struct {
 		Name string
 		Opts CCRCreateOpts
-		Want map[string]interface{}
+		Want map[string]any
 	}{
 		{
 			Name: "test defaults",
@@ -21,11 +21,11 @@ func TestCCRCreateOpts_BuildCCRParams(t *testing.T) {
 				RemoteName: "remote",
 				RemoteAddr: "remote.fake:9300",
 			},
-			Want: map[string]interface{}{
-				"persistent": map[string]interface{}{
-					"cluster": map[string]interface{}{
-						"remote": map[string]interface{}{
-							"remote": map[string]interface{}{
+			Want: map[string]any{
+				"persistent": map[string]any{
+					"cluster": map[string]any{
+						"remote": map[string]any{
+							"remote": map[string]any{
 								"mode":          "proxy",
 								"proxy_address": "remote.fake:9300",
 							},
@@ -42,11 +42,11 @@ func TestCCRCreateOpts_BuildCCRParams(t *testing.T) {
 				RemoteName: "remote",
 				RemoteAddr: "remote.fake:9300",
 			},
-			Want: map[string]interface{}{
-				"fake-type": map[string]interface{}{
-					"cluster": map[string]interface{}{
-						"remote": map[string]interface{}{
-							"remote": map[string]interface{}{
+			Want: map[string]any{
+				"fake-type": map[string]any{
+					"cluster": map[string]any{
+						"remote": map[string]any{
+							"remote": map[string]any{
 								"mode":          "proxy",
 								"proxy_address": "remote.fake:9300",
 							},
@@ -63,11 +63,11 @@ func TestCCRCreateOpts_BuildCCRParams(t *testing.T) {
 				RemoteName: "remote",
 				RemoteAddr: "remote.fake:9300",
 			},
-			Want: map[string]interface{}{
-				"fake-type": map[string]interface{}{
-					"cluster": map[string]interface{}{
-						"remote": map[string]interface{}{
-							"remote": map[string]interface{}{
+			Want: map[string]any{
+				"fake-type": map[string]any{
+					"cluster": map[string]any{
+						"remote": map[string]any{
+							"remote": map[string]any{
 								"mode":          "fake-mode",
 								"proxy_address": "remote.fake:9300",
 							},

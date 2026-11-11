@@ -12,7 +12,7 @@ import (
 
 // GetDataFromVaultString decrypts a Vault string and extracts the username and password based on specified keys.
 func GetDataFromVaultString(vaultString, decryptPass, userKey, passKey string) (*types.Creds, error) {
-	vaultYaml := make(map[string]interface{})
+	vaultYaml := make(map[string]any)
 	result := new(types.Creds)
 	decryptedString, decryptErr := vault.Decrypt(vaultString, decryptPass)
 	if decryptErr != nil {
@@ -37,7 +37,7 @@ func GetDataFromVaultString(vaultString, decryptPass, userKey, passKey string) (
 
 // GetDataFromVaultFile decrypts a Vault file and extracts the username and password based on specified keys.
 func GetDataFromVaultFile(vaultFile, decryptPass, userKey, passKey string) (*types.Creds, error) {
-	vaultYaml := make(map[string]interface{})
+	vaultYaml := make(map[string]any)
 	result := new(types.Creds)
 	if strings.HasPrefix(vaultFile, "~") {
 		homeDir, err := os.UserHomeDir()

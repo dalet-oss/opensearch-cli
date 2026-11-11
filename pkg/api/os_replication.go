@@ -13,7 +13,7 @@ import (
 func (api *OpensearchWrapper) CreateReplication(opts replication.StartReplicationReq, raw bool) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
-	var result interface{}
+	var result any
 	if rsp, err := api.Client.Do(ctx, opts, &result); err != nil {
 		return err
 	} else {
@@ -37,7 +37,7 @@ func (api *OpensearchWrapper) CreateReplication(opts replication.StartReplicatio
 func (api *OpensearchWrapper) PauseReplication(indexName string, raw bool) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
-	var result interface{}
+	var result any
 	if rsp, err := api.Client.Do(ctx, replication.PauseReplicationReq{Index: indexName}, &result); err != nil {
 		return err
 	} else {
@@ -61,7 +61,7 @@ func (api *OpensearchWrapper) PauseReplication(indexName string, raw bool) error
 func (api *OpensearchWrapper) ResumeReplication(indexName string, raw bool) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
-	var result interface{}
+	var result any
 	if rsp, err := api.Client.Do(ctx, replication.ResumeReplicationReq{Index: indexName}, &result); err != nil {
 		return err
 	} else {
@@ -83,7 +83,7 @@ func (api *OpensearchWrapper) ResumeReplication(indexName string, raw bool) erro
 func (api *OpensearchWrapper) StopReplication(indexName string, raw bool) error {
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
-	var result interface{}
+	var result any
 	if rsp, err := api.Client.Do(ctx, replication.StopReplicationReq{Index: indexName}, &result); err != nil {
 		return err
 	} else {
@@ -130,9 +130,9 @@ func (api *OpensearchWrapper) TaskStatusReplication(index string, detailed, raw 
 	ctx, cancelFunc := api.requestContext()
 	defer cancelFunc()
 	query := opensearchapi.CatRecoveryReq{Params: opensearchapi.CatRecoveryParams{
-		ActiveOnly: opensearchapi.ToPointer(false),
-		Detailed:   opensearchapi.ToPointer(detailed),
-		V:          opensearchapi.ToPointer(true),
+		ActiveOnly: new(false),
+		Detailed:   new(detailed),
+		V:          new(true),
 		Pretty:     true,
 	}}
 	if len(index) > 0 {

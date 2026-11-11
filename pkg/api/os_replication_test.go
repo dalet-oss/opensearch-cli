@@ -3,7 +3,6 @@ package api
 import (
 	"github.com/dalet-oss/opensearch-cli/pkg/api/types/replication"
 	"github.com/dalet-oss/opensearch-cli/pkg/api/types/stats"
-	"github.com/dalet-oss/opensearch-cli/pkg/utils/fp"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -60,7 +59,7 @@ func TestOpensearchWrapper_CreateReplication(t *testing.T) {
 			Name:          "positive|create replication task",
 			WantErr:       false,
 			Shotgun:       leaderShotgunInstance(replicatedIndexName, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(100),
+			DocumentCount: new(100),
 			Wrapper:       testWrapper(),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				preConfigureOSIndex(t, c, leaderOsInst, replicatedIndexName)
@@ -171,7 +170,7 @@ func TestOpensearchWrapper_PauseReplication(t *testing.T) {
 			Name:          "positive|pausing replication",
 			WantErr:       false,
 			Shotgun:       leaderShotgunInstance(replicatedIndexName, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(50),
+			DocumentCount: new(50),
 			Wrapper:       testWrapper(),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				preConfigureOSIndex(t, c, leaderOsInst, replicatedIndexName)
@@ -206,7 +205,7 @@ func TestOpensearchWrapper_PauseReplication(t *testing.T) {
 			Name:          "negative|pausing replication that doesn't exist",
 			WantErr:       true,
 			Shotgun:       leaderShotgunInstance(replicatedIndexName, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(50),
+			DocumentCount: new(50),
 			Wrapper:       testWrapper(),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				preConfigureOSIndex(t, c, leaderOsInst, replicatedIndexName)
@@ -291,7 +290,7 @@ func TestOpensearchWrapper_ResumeReplication(t *testing.T) {
 			Name:          "positive|resume replication",
 			WantErr:       false,
 			Shotgun:       leaderShotgunInstance(replicatedIndexName, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(10),
+			DocumentCount: new(10),
 			Wrapper:       testWrapper(),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				preConfigureOSIndex(t, c, leaderOsInst, replicatedIndexName)
@@ -333,7 +332,7 @@ func TestOpensearchWrapper_ResumeReplication(t *testing.T) {
 			Name:          "negative|resume replication that is not paused",
 			WantErr:       true,
 			Shotgun:       leaderShotgunInstance(replicatedIndexName, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(10),
+			DocumentCount: new(10),
 			Wrapper:       testWrapper(),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				preConfigureOSIndex(t, c, leaderOsInst, replicatedIndexName)
@@ -423,7 +422,7 @@ func TestOpensearchWrapper_StatusReplication(t *testing.T) {
 			Name:          "positive|query existing replication",
 			WantErr:       false,
 			Shotgun:       leaderShotgunInstance(replicatedIndexName, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(10),
+			DocumentCount: new(10),
 			Wrapper:       testWrapper(),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				preConfigureOSIndex(t, c, leaderOsInst, replicatedIndexName)
@@ -534,7 +533,7 @@ func TestOpensearchWrapper_StopReplication(t *testing.T) {
 			Name:          "positive|stop active replication",
 			WantErr:       false,
 			Shotgun:       leaderShotgunInstance(replicatedIndexName, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(10),
+			DocumentCount: new(10),
 			Wrapper:       testWrapper(),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				preConfigureOSIndex(t, c, leaderOsInst, replicatedIndexName)
@@ -578,7 +577,7 @@ func TestOpensearchWrapper_StopReplication(t *testing.T) {
 			Name:          "negative|stop already stopped replication",
 			WantErr:       true,
 			Shotgun:       leaderShotgunInstance(replicatedIndexName, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(10),
+			DocumentCount: new(10),
 			Wrapper:       testWrapper(),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				preConfigureOSIndex(t, c, leaderOsInst, replicatedIndexName)
@@ -657,7 +656,7 @@ func TestOpensearchWrapper_TaskStatusReplication(t *testing.T) {
 			Name:          "positive|query existing replication",
 			WantErr:       false,
 			Shotgun:       leaderShotgunInstance(replicatedIndexName, 10*time.Millisecond),
-			DocumentCount: fp.AsPointer(10),
+			DocumentCount: new(10),
 			Wrapper:       testWrapper(),
 			ConfigureLeaderFunc: func(t *testing.T, c *OpensearchWrapper) {
 				preConfigureOSIndex(t, c, leaderOsInst, replicatedIndexName)
